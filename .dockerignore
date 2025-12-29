@@ -1,8 +1,8 @@
 **
 
-!build
-!build/extracted
-!build/extracted/**
+!**build
+!**build/extracted
+!**build/extracted/**
 
 !.env
 !.secret.env

@@ -1,28 +1,78 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.6'
-	id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.6' apply false
+    id 'io.spring.dependency-management' version '1.1.6' apply false
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'com.example'
+    version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    repositories {
+        mavenCentral()
+    }
 }
 
-repositories {
-	mavenCentral()
-}
+subprojects {
+    plugins.withType(JavaPlugin) {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+        dependencies {
+            implementation 'org.springframework.boot:spring-boot-starter'
+            compileOnly 'org.projectlombok:lombok'
+            annotationProcessor 'org.projectlombok:lombok'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+            testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+            testCompileOnly 'org.projectlombok:lombok'
+            testAnnotationProcessor 'org.projectlombok:lombok'
+        }
 
-tasks.named('test') {
-	useJUnitPlatform()
+        tasks.named('test') {
+            useJUnitPlatform()
+        }
+    }
+
+    if (project.path.startsWith(':lib')) {
+        apply plugin: 'java-library'
+        apply plugin: 'org.springframework.boot'
+        apply plugin: 'io.spring.dependency-management'
+
+        bootJar { enabled = false }
+        jar { enabled = true }
+    }
+
+    if (project.path.startsWith(':app')) {
+        apply plugin: 'java'
+        apply plugin: 'org.springframework.boot'
+        apply plugin: 'io.spring.dependency-management'
+
+        bootJar {
+            layered {
+                enabled = true
+                application {
+                    intoLayer("spring-boot-loader") {
+                        include "org/springframework/boot/loader/**"
+                    }
+                    intoLayer("application")
+                }
+                dependencies {
+                    intoLayer("snapshot-dependencies") {
+                        includeProjectDependencies = true
+                    }
+                    intoLayer("dependencies")
+                }
+                layerOrder = [
+                    "dependencies", 
+                    "spring-boot-loader", 
+                    "snapshot-dependencies",
+                    "application"
+                ]
+            }
+            archiveFileName = 'app.jar'
+        }
+    }
 }

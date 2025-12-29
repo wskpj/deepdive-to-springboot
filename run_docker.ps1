@@ -1,13 +1,22 @@
-Write-Host "--- 1. Building JAR locally ---" -ForegroundColor Cyan
-./gradlew bootJar -x test
+$EXTRACT_PATH = "app/build/extracted"
+
+Write-Host "--- [1/4] Building JAR locally.. ---" -ForegroundColor Cyan
+./gradlew bootJar -x test --parallel
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "--- Local Build Failed! Stopping process. ---" -ForegroundColor Red
+    Write-Host "--- Build Failed! Terminating.. ---" -ForegroundColor Red
     exit $LASTEXITCODE
 }
 
-Write-Host "--- 2. Starting with Docker Compose ---" -ForegroundColor Cyan
+Write-Host "--- [2/4] Extracting Layers Locally.. ---" -ForegroundColor Cyan
+if (Test-Path $EXTRACT_PATH) {
+    Remove-Item -Recurse -Force $EXTRACT_PATH
+}
+New-Item -ItemType Directory -Path $EXTRACT_PATH | Out-Null
+java -Djarmode=tools -jar "app/build/libs/app.jar" extract --layers --launcher --destination $EXTRACT_PATH
+
+Write-Host "--- [3/4] Docker Compose Build & Up.. ---" -ForegroundColor Cyan
 docker-compose up -d --build
 
-Write-Host "--- 3. Application is starting! ---" -ForegroundColor Green
+Write-Host "--- [4/4] Application is Starting.. ---" -ForegroundColor Green
 docker logs -f "deepdive-app"

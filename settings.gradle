@@ -1,1 +1,3 @@
 rootProject.name = 'deepdive-app'
+
+include 'app'

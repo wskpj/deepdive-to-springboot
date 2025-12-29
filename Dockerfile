@@ -1,7 +1,11 @@
 FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
 
 EXPOSE 8080
 
-COPY build/libs/*.jar app.jar
+COPY app/build/extracted/dependencies/ ./
+COPY app/build/extracted/spring-boot-loader/ ./
+COPY app/build/extracted/snapshot-dependencies/ ./
+COPY app/build/extracted/application/ ./
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
