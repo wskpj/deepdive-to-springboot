@@ -1,8 +1,10 @@
 package com.example.deepdive_app.api;
 
+import com.example.deepdive_app.event.TraceEvent;
 import com.example.deepdive_app.service.TraceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TraceController {
 
     private final TraceService traceService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @GetMapping("/sync")
     public String sync() {
@@ -25,5 +28,12 @@ public class TraceController {
         log.info("Controller: Received async request");
         traceService.asyncMethod();
         return "Async request triggered";
+    }
+
+    @GetMapping("/event")
+    public String triggerEvent() {
+        log.info("Controller: Publishing event");
+        eventPublisher.publishEvent(new TraceEvent("Trace Event!"));
+        return "Event published";
     }
 }
