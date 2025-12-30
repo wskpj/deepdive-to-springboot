@@ -1,3 +1,5 @@
 rootProject.name = 'deepdive-app'
 
+include 'lib:web-swagger'
+
 include 'app'
