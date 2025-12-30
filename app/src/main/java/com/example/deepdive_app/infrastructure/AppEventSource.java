@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AppEventSource implements EventSource {
     
-    TRACE("TRACE");
+    TRACE("TRACE"),
+    AUTH("AUTH");
     
     private final String source;
 }
