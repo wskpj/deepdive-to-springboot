@@ -1,20 +1,25 @@
-package com.example.deepdive_app.api;
+package com.example.deepdive_app.trace.api;
 
-import com.example.deepdive_app.event.TraceEvent;
-import com.example.deepdive_app.service.TraceService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.deepdive_app.infrastructure.AppEventType;
+import com.example.deepdive_app.trace.event.TraceEvent;
+import com.example.deepdive_app.trace.service.TraceService;
+import com.example.lib.event.core.EventPublisher;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class TraceController {
 
     private final TraceService traceService;
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
     @GetMapping("/sync")
     public String sync() {
@@ -33,7 +38,7 @@ public class TraceController {
     @GetMapping("/event")
     public String triggerEvent() {
         log.info("Controller: Publishing event");
-        eventPublisher.publishEvent(new TraceEvent("Trace Event!"));
+        eventPublisher.publish(TraceEvent.of(AppEventType.TRACE_EVENT));
         return "Event published";
     }
 }

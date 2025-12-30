@@ -1,4 +1,4 @@
-package com.example.deepdive_app.service;
+package com.example.deepdive_app.trace.service;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

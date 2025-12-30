@@ -1,4 +1,4 @@
-package com.example.deepdive_app.event;
+package com.example.deepdive_app.trace.event;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -17,9 +17,9 @@ public class TraceEventListener {
     @EventListener
     @SneakyThrows
     public void handleSyncEvent(TraceEvent event) {
-        log.info("Caught Sync Event: {}", event.getMessage());
+        log.info("Caught Sync Event: {}", event.getEventType());
         Thread.sleep(1000);
-        log.info("Handling Sync Event: {}", event.getMessage());
+        log.info("Handling Sync Event: {}", event.getEventType());
     }
     
     /**
@@ -30,8 +30,8 @@ public class TraceEventListener {
    @EventListener
    @SneakyThrows
    public void handleAsyncEvent(TraceEvent event) {
-        log.info("Caught Async Event: {}", event.getMessage());
+        log.info("Caught Async Event: {}", event.getEventType());
         Thread.sleep(2000);
-        log.info("Handling Async Event: {}", event.getMessage());
+        log.info("Handling Async Event: {}", event.getEventType());
     }
 }

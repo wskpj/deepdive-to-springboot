@@ -1,4 +1,4 @@
-package com.example.deepdive_app.config;
+package com.example.deepdive_app.global.config;
 
 import java.util.Map;
 

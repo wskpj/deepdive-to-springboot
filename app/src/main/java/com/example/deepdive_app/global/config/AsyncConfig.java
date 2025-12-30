@@ -1,4 +1,4 @@
-package com.example.deepdive_app.config;
+package com.example.deepdive_app.global.config;
 
 import org.springframework.boot.task.ThreadPoolTaskExecutorCustomizer;
 import org.springframework.context.annotation.Bean;
