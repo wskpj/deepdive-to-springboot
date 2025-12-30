@@ -1,5 +1,6 @@
 rootProject.name = 'deepdive-app'
 
+include 'lib:exception-core'
 include 'lib:event-core'
 include 'lib:event-starter'
 include 'lib:web-swagger'
