@@ -11,8 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.lib.common.core.ExceptionHandleDispatcher;
 import com.example.lib.common.core.ExceptionHandleStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
+import com.example.lib.web.core.CookieManager;
 import com.example.lib.web.core.ExceptionResponseDispatcher;
 import com.example.lib.web.core.ExceptionResponseMapper;
+import com.example.lib.web.starter.internal.beans.StandardCookieManager;
 import com.example.lib.web.starter.internal.dispatcher.DefaultExceptionResponseDispatcher;
 import com.example.lib.web.starter.internal.filter.ResponseFilter;
 import com.example.lib.web.starter.internal.handler.StandardExceptionHandler;
@@ -27,9 +29,19 @@ import com.example.lib.web.starter.internal.strategy.SpringStandardExceptionStra
 import com.example.lib.web.starter.internal.strategy.ValidationExceptionStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @AutoConfiguration
 @EnableConfigurationProperties(WebProperties.class)
 public class WebStarterConfig implements WebMvcConfigurer {
+
+    @Bean
+    @ConditionalOnMissingBean(CookieManager.class)
+    public CookieManager cookieManager(
+        HttpServletRequest request, HttpServletResponse response) {
+        return new StandardCookieManager(request, response);
+    }
 
     @Bean
     @ConditionalOnMissingBean(ResponseFilter.class)
