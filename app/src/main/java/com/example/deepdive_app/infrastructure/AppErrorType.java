@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum AppErrorType implements com.example.lib.common.core.ErrorType {
+public enum AppErrorType implements com.example.lib.common.core.exception.ErrorType {
     
     MEMBER_EMAIL_EXISTING("MEMBER_EMAIL_EXISTING", "Email already exists"),
     MEMBER_CREATION_FAILED("MEMBER_CREATION_FAILED", "Member creation failed");
