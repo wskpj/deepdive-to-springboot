@@ -26,6 +26,6 @@ spring:
 logging:
   level:
     root: INFO
-    com.example.lib: INFO
+    com.example.lib: DEBUG
     com.example.deepdive_app: DEBUG
-    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL: INFO
