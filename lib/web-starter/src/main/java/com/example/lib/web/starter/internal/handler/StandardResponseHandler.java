@@ -31,6 +31,10 @@ public class StandardResponseHandler implements ResponseBodyAdvice<Object> {
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
         Class<?> parameterType = returnType.getParameterType();
 
+        if (ApiResult.class.isAssignableFrom(parameterType)) {
+            return false;
+        }
+
         if (Resource.class.isAssignableFrom(parameterType) || byte[].class.isAssignableFrom(parameterType)) {
             return false;
         }
