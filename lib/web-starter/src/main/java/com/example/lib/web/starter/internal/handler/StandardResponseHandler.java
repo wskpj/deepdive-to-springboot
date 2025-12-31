@@ -21,6 +21,7 @@ import lombok.SneakyThrows;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class StandardResponseHandler implements ResponseBodyAdvice<Object> {
 
     private final ResponseFilter responseFilter;

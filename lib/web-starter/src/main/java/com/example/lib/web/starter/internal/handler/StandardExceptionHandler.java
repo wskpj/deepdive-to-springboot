@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.lib.common.core.ExceptionHandleDispatcher;
+import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.trace.core.TraceConstants;
 import com.example.lib.web.core.ApiError;
 import com.example.lib.web.core.ApiResult;

@@ -2,7 +2,7 @@ package com.example.lib.web.core;
 
 import org.springframework.http.HttpStatus;
 
-import com.example.lib.common.core.ErrorType;
+import com.example.lib.common.core.exception.ErrorType;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

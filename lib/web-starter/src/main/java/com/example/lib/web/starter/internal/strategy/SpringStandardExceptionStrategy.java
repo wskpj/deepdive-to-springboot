@@ -10,7 +10,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
 
 import lombok.RequiredArgsConstructor;

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class StandardCookieManager implements CookieManager {
 
     private final HttpServletRequest request;

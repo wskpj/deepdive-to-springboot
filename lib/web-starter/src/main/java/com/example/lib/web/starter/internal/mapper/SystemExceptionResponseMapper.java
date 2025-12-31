@@ -3,7 +3,7 @@ package com.example.lib.web.starter.internal.mapper;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import com.example.lib.common.core.SystemException;
+import com.example.lib.common.core.exception.SystemException;
 import com.example.lib.web.core.ApiError;
 import com.example.lib.web.core.ExceptionResponseMapper;
 import com.example.lib.web.core.WebError;

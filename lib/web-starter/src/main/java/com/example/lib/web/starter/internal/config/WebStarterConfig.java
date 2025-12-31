@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.example.lib.common.core.ExceptionHandleDispatcher;
-import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
+import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.web.core.CookieManager;
 import com.example.lib.web.core.ExceptionResponseDispatcher;

@@ -18,6 +18,7 @@ import com.example.lib.trace.starter.internal.handler.DefaultExceptionContextTra
 import jakarta.servlet.http.HttpServletRequest;
 
 @AutoConfiguration
+@SuppressWarnings("null")
 public class TraceStarterConfig {
 
     @Bean

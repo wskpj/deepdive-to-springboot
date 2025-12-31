@@ -13,8 +13,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 
-import com.example.lib.common.core.HandledException;
-import com.example.lib.common.core.SystemException;
+import com.example.lib.common.core.exception.HandledException;
+import com.example.lib.common.core.exception.SystemException;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
 
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
     private final HttpServletRequest request;

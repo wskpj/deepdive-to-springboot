@@ -5,7 +5,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 
-import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

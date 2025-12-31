@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("null")
 public class TraceFilter extends OncePerRequestFilter {
 
     private final TraceIdGenerator traceIdGenerator;
