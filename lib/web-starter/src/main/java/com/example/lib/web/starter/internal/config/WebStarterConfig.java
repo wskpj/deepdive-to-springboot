@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.lib.common.core.ExceptionHandleDispatcher;
 import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.web.core.ExceptionResponseDispatcher;
 import com.example.lib.web.core.ExceptionResponseMapper;
 import com.example.lib.web.starter.internal.dispatcher.DefaultExceptionResponseDispatcher;
@@ -97,8 +98,9 @@ public class WebStarterConfig implements WebMvcConfigurer {
      */
     @Bean
     @ConditionalOnMissingBean(SpringStandardExceptionStrategy.class)
-    public ExceptionHandleStrategy springStandardExceptionStrategy() {
-        return new SpringStandardExceptionStrategy();
+    public ExceptionHandleStrategy springStandardExceptionStrategy(
+            ExceptionContextTracer tracer) {
+        return new SpringStandardExceptionStrategy(tracer);
     }
 
     @Bean

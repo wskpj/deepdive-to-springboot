@@ -3,6 +3,8 @@ package com.example.lib.trace.starter.internal.filter;
 import java.io.IOException;
 
 import org.slf4j.MDC;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
@@ -45,6 +47,8 @@ public class TraceFilter extends OncePerRequestFilter {
             MDC.put(TraceConstants.CLIENT_IP, clientIp);
             MDC.put(TraceConstants.USER_AGENT, userAgent);
 
+            updateRequestContext(wrappedRequest);
+
             filterChain.doFilter(wrappedRequest, response);
         } finally {
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -55,6 +59,12 @@ public class TraceFilter extends OncePerRequestFilter {
             log.info("{} {} {} - {}ms", status, method, uri, elapsedTime);
 
             MDC.clear();
+        }
+    }
+
+    private void updateRequestContext(ContentCachingRequestWrapper wrappedRequest) {
+        if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes) {
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(wrappedRequest, attributes.getResponse()), true);
         }
     }
 }
