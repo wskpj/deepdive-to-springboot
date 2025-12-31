@@ -3,7 +3,7 @@ package com.example.lib.common.starter.internal.strategy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
-import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
 
 import lombok.RequiredArgsConstructor;

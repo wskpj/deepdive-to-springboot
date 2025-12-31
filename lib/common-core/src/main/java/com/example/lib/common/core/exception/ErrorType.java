@@ -1,4 +1,4 @@
-package com.example.lib.common.core;
+package com.example.lib.common.core.exception;
 
 public interface ErrorType {
 

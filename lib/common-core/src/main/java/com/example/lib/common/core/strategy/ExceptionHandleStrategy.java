@@ -1,4 +1,4 @@
-package com.example.lib.common.core;
+package com.example.lib.common.core.strategy;
 
 public interface ExceptionHandleStrategy {
 
