@@ -10,6 +10,7 @@ import org.springframework.core.Ordered;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceIdGenerator;
 import com.example.lib.trace.starter.internal.aspect.AsyncExecutionAspect;
+import com.example.lib.trace.starter.internal.aspect.ExceptionTraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
 import com.example.lib.trace.starter.internal.filter.TraceFilter;
 import com.example.lib.trace.starter.internal.generator.UuidTraceIdGenerator;
@@ -39,6 +40,11 @@ public class TraceStarterConfig {
     @Bean
     public AsyncExecutionAspect asyncExecutionAspect() {
         return new AsyncExecutionAspect();
+    }
+
+    @Bean
+    public ExceptionTraceAspect exceptionTraceAspect(ExceptionContextTracer tracer) {
+        return new ExceptionTraceAspect(tracer);
     }
 
     @Bean
