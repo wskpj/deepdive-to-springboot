@@ -8,7 +8,8 @@ import com.example.deepdive_app.auth.api.dto.SignupRequest;
 import com.example.deepdive_app.auth.entity.Account;
 import com.example.deepdive_app.auth.event.AccountCreatedEvent;
 import com.example.deepdive_app.auth.repository.AccountRepository;
-import com.example.deepdive_app.infrastructure.AppDomainException;
+import com.example.deepdive_app.infrastructure.DomainException;
+import com.example.deepdive_app.infrastructure.AppErrorType;
 import com.example.lib.event.core.EventPublisher;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AuthService {
 
     @Transactional
     public Long signUp(SignupRequest request) {
-        if (accountRepository.existsByEmail(request.email())) throw new AppDomainException("Email already exists: " + request.email());
+        if (accountRepository.existsByEmail(request.email())) throw new DomainException(AppErrorType.MEMBER_EMAIL_EXISTING);
 
         Account account = Account.builder()
                 .email(request.email())
@@ -38,7 +39,7 @@ public class AuthService {
                 account.getEmail());
 
         eventPublisher.publish(event);
-        if (event.getMemberId() == null) throw new AppDomainException("Member creation failed");
+        if (event.getMemberId() == null) throw new DomainException(AppErrorType.MEMBER_CREATION_FAILED);
 
         account.setMemberId(event.getMemberId());
         Account savedAccount = accountRepository.save(account);

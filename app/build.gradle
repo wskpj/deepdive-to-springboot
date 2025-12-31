@@ -6,8 +6,9 @@ dependencies {
 	implementation 'com.mysql:mysql-connector-j'
 
 	// lib
-	implementation project(':lib:exception-core')
+	implementation project(':lib:common-core')
 	implementation project(':lib:event-starter')
 	implementation project(':lib:security-starter')
 	implementation project(':lib:web-swagger')
+	implementation project(':lib:web-starter')
 }

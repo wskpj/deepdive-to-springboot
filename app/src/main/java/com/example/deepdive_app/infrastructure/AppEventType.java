@@ -1,13 +1,11 @@
 package com.example.deepdive_app.infrastructure;
 
-import com.example.lib.event.core.EventType;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum AppEventType implements EventType {
+public enum AppEventType implements com.example.lib.event.core.EventType {
     
     TRACE_EVENT("TRACE_EVENT", "Trace Event"),
     MEMBER_SIGNED_UP("MEMBER_SIGNED_UP", "Member Signed Up");
