@@ -11,6 +11,7 @@ import org.slf4j.MDC;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.WebUtils;
 
 import com.example.lib.common.core.HandledException;
 import com.example.lib.common.core.SystemException;
@@ -18,7 +19,6 @@ import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,8 +102,8 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     }
 
     private String extractPayload() {
-        HttpServletRequest actualRequest = getActualRequest();
-        if (actualRequest instanceof ContentCachingRequestWrapper wrapped) {
+        ContentCachingRequestWrapper wrapped = getWrapper();
+        if (wrapped != null) {
             byte[] body = wrapped.getContentAsByteArray();
             if (body.length > 0) {
                 return new String(body, StandardCharsets.UTF_8);
@@ -112,20 +112,10 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         return "{}";
     }
 
-    private HttpServletRequest getActualRequest() {
-        HttpServletRequest req = (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes)
+    private ContentCachingRequestWrapper getWrapper() {
+        HttpServletRequest currentRequest = (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes)
                 ? attributes.getRequest() : request;
 
-        while (req instanceof HttpServletRequestWrapper wrapper) {
-            if (req instanceof ContentCachingRequestWrapper) {
-                return req;
-            }
-            if (wrapper.getRequest() instanceof HttpServletRequest next) {
-                req = next;
-            } else {
-                break;
-            }
-        }
-        return req;
+        return WebUtils.getNativeRequest(currentRequest, ContentCachingRequestWrapper.class);
     }
 }
