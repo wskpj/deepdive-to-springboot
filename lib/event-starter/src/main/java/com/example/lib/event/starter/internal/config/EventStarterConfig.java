@@ -13,7 +13,8 @@ public class EventStarterConfig {
 
     @Bean
     @ConditionalOnMissingBean(EventPublisher.class)
-    public EventPublisher eventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    public EventPublisher eventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
         return new DefaultEventPublisher(applicationEventPublisher);
     }
 }

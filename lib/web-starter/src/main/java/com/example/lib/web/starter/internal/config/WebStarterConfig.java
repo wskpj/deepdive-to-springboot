@@ -35,6 +35,13 @@ public class WebStarterConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @ConditionalOnMissingBean(ExceptionResponseDispatcher.class)
+    public ExceptionResponseDispatcher exceptionResponseDispatcher(
+            List<ExceptionResponseMapper> mappers) {
+        return new DefaultExceptionResponseDispatcher(mappers);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(name = "standardResponseHandler")
     public StandardResponseHandler standardResponseHandler(
             ResponseFilter responseFilter,
@@ -50,37 +57,30 @@ public class WebStarterConfig implements WebMvcConfigurer {
         return new StandardExceptionHandler(handleDispatcher, responseDispatcher);
     }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "exceptionResponseDispatcher")
-    public ExceptionResponseDispatcher exceptionResponseDispatcher(
-            List<ExceptionResponseMapper> mappers) {
-        return new DefaultExceptionResponseDispatcher(mappers);
-    }
-
     /**
      * Mappers
      */
     @Bean
-    @ConditionalOnMissingBean(name = "handledExceptionResponseMapper")
+    @ConditionalOnMissingBean(HandledExceptionResponseMapper.class)
     public ExceptionResponseMapper handledExceptionResponseMapper() {
         return new HandledExceptionResponseMapper();
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "unhandledExceptionResponseMapper")
+    @ConditionalOnMissingBean(UnhandledExceptionResponseMapper.class)
     public ExceptionResponseMapper unhandledExceptionResponseMapper() {
         return new UnhandledExceptionResponseMapper();
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "systemExceptionResponseMapper")
+    @ConditionalOnMissingBean(SystemExceptionResponseMapper.class)
     public ExceptionResponseMapper systemExceptionResponseMapper() {
         return new SystemExceptionResponseMapper();
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "validationExceptionResponseMapper")
-    public ExceptionResponseMapper defaultValidationExceptionResponseMapper() {
+    @ConditionalOnMissingBean(ValidationExceptionResponseMapper.class)
+    public ExceptionResponseMapper validationExceptionResponseMapper() {
         return new ValidationExceptionResponseMapper();
     }
 
@@ -88,7 +88,7 @@ public class WebStarterConfig implements WebMvcConfigurer {
      * Strategies
      */
     @Bean
-    @ConditionalOnMissingBean(name = "validationExceptionStrategy")
+    @ConditionalOnMissingBean(ValidationExceptionStrategy.class)
     public ExceptionHandleStrategy validationExceptionStrategy() {
         return new ValidationExceptionStrategy();
     }
