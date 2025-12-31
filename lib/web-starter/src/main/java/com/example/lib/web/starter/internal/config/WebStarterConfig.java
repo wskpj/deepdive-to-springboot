@@ -17,10 +17,12 @@ import com.example.lib.web.starter.internal.filter.ResponseFilter;
 import com.example.lib.web.starter.internal.handler.StandardExceptionHandler;
 import com.example.lib.web.starter.internal.handler.StandardResponseHandler;
 import com.example.lib.web.starter.internal.mapper.HandledExceptionResponseMapper;
+import com.example.lib.web.starter.internal.mapper.SpringStandardExceptionResponseMapper;
 import com.example.lib.web.starter.internal.mapper.SystemExceptionResponseMapper;
 import com.example.lib.web.starter.internal.mapper.UnhandledExceptionResponseMapper;
 import com.example.lib.web.starter.internal.mapper.ValidationExceptionResponseMapper;
 import com.example.lib.web.starter.internal.properties.WebProperties;
+import com.example.lib.web.starter.internal.strategy.SpringStandardExceptionStrategy;
 import com.example.lib.web.starter.internal.strategy.ValidationExceptionStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -84,9 +86,21 @@ public class WebStarterConfig implements WebMvcConfigurer {
         return new ValidationExceptionResponseMapper();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(SpringStandardExceptionResponseMapper.class)
+    public ExceptionResponseMapper springStandardExceptionResponseMapper() {
+        return new SpringStandardExceptionResponseMapper();
+    }
+
     /**
      * Strategies
      */
+    @Bean
+    @ConditionalOnMissingBean(SpringStandardExceptionStrategy.class)
+    public ExceptionHandleStrategy springStandardExceptionStrategy() {
+        return new SpringStandardExceptionStrategy();
+    }
+
     @Bean
     @ConditionalOnMissingBean(ValidationExceptionStrategy.class)
     public ExceptionHandleStrategy validationExceptionStrategy() {

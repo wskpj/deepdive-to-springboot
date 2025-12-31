@@ -44,7 +44,7 @@ class WebStarterConfigTest {
     @Test
     @DisplayName("기본 응답 매퍼들이 모두 등록되어야 한다")
     void shouldRegisterDefaultMappers() {
-        int MAPPER_COUNT = 4;
+        int MAPPER_COUNT = 5;
 
         contextRunner.run(context -> {
             assertThat(context).getBeans(ExceptionResponseMapper.class).hasSizeGreaterThanOrEqualTo(MAPPER_COUNT);
