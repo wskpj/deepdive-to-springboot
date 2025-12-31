@@ -18,18 +18,22 @@ public class ThrowsAspect {
         try {
             return joinPoint.proceed();
         } catch (Exception e) {
+            if (e instanceof BaseException) throw e;
+
             Class<? extends BaseException> targetExceptionClass = throwsAnnotation.value();
 
             log.warn("Caught and Translating Exception: {} -> {}",
                     e.getClass().getSimpleName(),
                     targetExceptionClass.getSimpleName());
 
+            BaseException wrappedException;
             try {
-                throw translateWrappedException(targetExceptionClass, e);
+                wrappedException = translateWrappedException(targetExceptionClass, e);
             } catch (Exception translationEx) {
-                log.warn("Failed to translate exception. Re-throwing original exception.");
-                throw e; // Handled in ExceptionHandleStrategy
+                log.warn("Failed to translate exception. Re-throwing original exception. Reason: {}", translationEx.getMessage());
+                throw e; // Handled Original Exception with ExceptionHandleStrategy
             }
+            throw wrappedException;
         }
     }
 
