@@ -1,0 +1,5 @@
+dependencies {
+    api project(':lib:common-core')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+}
