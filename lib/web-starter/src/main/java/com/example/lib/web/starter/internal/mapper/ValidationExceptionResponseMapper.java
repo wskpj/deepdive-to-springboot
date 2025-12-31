@@ -1,5 +1,7 @@
 package com.example.lib.web.starter.internal.mapper;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -11,6 +13,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class ValidationExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override

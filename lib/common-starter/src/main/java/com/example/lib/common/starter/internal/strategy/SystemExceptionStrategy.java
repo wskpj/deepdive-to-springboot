@@ -9,7 +9,7 @@ import com.example.lib.common.core.SystemException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 100)
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class SystemExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
@@ -19,6 +19,10 @@ public class SystemExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
     public void handle(Exception e) {
-        log.error("System Exception: {}", e.getMessage(), e);
+        SystemException ex = (SystemException) e;
+        log.error("[System Exception] {} - {} (Details: {})",
+                ex.getErrorType().getCode(),
+                ex.getErrorType().getMessage(),
+                ex.getDetails() != null ? ex.getDetails() : "none");
     }
 }

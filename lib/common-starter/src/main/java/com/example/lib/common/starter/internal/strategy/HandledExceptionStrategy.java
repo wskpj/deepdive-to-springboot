@@ -9,7 +9,7 @@ import com.example.lib.common.core.HandledException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 100)
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class HandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
@@ -19,6 +19,10 @@ public class HandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
     public void handle(Exception e) {
-        log.warn("Handled Exception: {}", e.getMessage());
+        HandledException ex = (HandledException) e;
+        log.warn("[Handled Exception] {} - {} (Details: {})",
+                ex.getErrorType().getCode(),
+                ex.getErrorType().getMessage(),
+                ex.getDetails() != null ? ex.getDetails() : "none");
     }
 }

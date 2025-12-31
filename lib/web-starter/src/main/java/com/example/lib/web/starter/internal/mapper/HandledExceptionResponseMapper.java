@@ -8,7 +8,7 @@ import com.example.lib.web.core.ApiError;
 import com.example.lib.web.core.ExceptionResponseMapper;
 import com.example.lib.web.core.WebError;
 
-@Order(Ordered.LOWEST_PRECEDENCE - 100)
+@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class HandledExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override
