@@ -1,5 +1,6 @@
 dependencies {
     api project(':lib:common-core')
+    api project(':lib:trace-core')
     implementation 'org.springframework.boot:spring-boot-starter'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

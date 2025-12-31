@@ -2,6 +2,8 @@ package com.example.lib.common.starter.internal.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.mockito.Mockito.mock;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -9,11 +11,13 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import com.example.lib.common.core.ExceptionHandleDispatcher;
 import com.example.lib.common.core.ExceptionHandleStrategy;
+import com.example.lib.trace.core.ExceptionContextTracer;
 
 class CommonStarterConfigTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(CommonStarterConfig.class));
+            .withConfiguration(AutoConfigurations.of(CommonStarterConfig.class))
+            .withBean(ExceptionContextTracer.class, () -> mock(ExceptionContextTracer.class));
 
     @Test
     @DisplayName("ExceptionHandleDispatcher 빈이 정상적으로 등록되어야 한다")

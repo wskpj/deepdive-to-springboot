@@ -4,9 +4,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
 	implementation 'com.mysql:mysql-connector-j'
+	
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
 	// lib
 	implementation project(':lib:common-core')
+	implementation project(':lib:trace-starter')
 	implementation project(':lib:event-starter')
 	implementation project(':lib:security-starter')
 	implementation project(':lib:web-swagger')

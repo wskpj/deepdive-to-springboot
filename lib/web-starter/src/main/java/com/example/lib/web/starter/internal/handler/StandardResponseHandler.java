@@ -1,5 +1,6 @@
 package com.example.lib.web.starter.internal.handler;
 
+import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import com.example.lib.trace.core.TraceConstants;
 import com.example.lib.web.core.ApiResult;
 import com.example.lib.web.starter.internal.filter.ResponseFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,11 +43,8 @@ public class StandardResponseHandler implements ResponseBodyAdvice<Object> {
                                   Class<? extends HttpMessageConverter<?>> converterType, 
                                   ServerHttpRequest request, ServerHttpResponse response) {
 
-        if (body instanceof ApiResult) {
-            return body;
-        }
-
-        Object wrappedBody = ApiResult.ok(body);
+        String traceId = MDC.get(TraceConstants.TRACE_ID);
+        ApiResult<Object> wrappedBody = ApiResult.ok(body, traceId);
 
         // StringHttpMessageConverter가 선택된 경우 수동으로 JSON 문자열 변환
         if (StringHttpMessageConverter.class.isAssignableFrom(converterType)) {

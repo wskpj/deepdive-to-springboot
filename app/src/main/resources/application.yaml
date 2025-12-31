@@ -22,3 +22,10 @@ spring:
   output:
     ansi:
       enabled: always
+
+logging:
+  level:
+    root: INFO
+    com.example.lib: INFO
+    com.example.deepdive_app: DEBUG
+    org.hibernate.SQL: DEBUG

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    
-    <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(---){faint} %clr([%15.15t]){faint} %clr([%X{traceId:-NO-TRACE}]){cyan} %clr(%X{indent}){yellow} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+    <!-- 라이브러리에 내장된 공통 로깅 설정 로드 -->
+    <include resource="logback-base.xml"/>
 
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-            <charset>utf8</charset>
-        </encoder>
-    </appender>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-    </root>
+    <!-- local - 텍스트 콘솔 활성화 -->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_TEXT" />
+        </root>
+    </springProfile>
+    <!-- prod/stage - JSON 콘솔만 활성화 -->
+    <springProfile name="prod, stage">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_JSON" />
+        </root>
+    </springProfile>
 </configuration>

@@ -10,22 +10,25 @@ public record ApiResult<T>(
     boolean success,
     T data,
     ApiError error,
+    String traceId,
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime timestamp
 ) {
-    public static <T> ApiResult<T> ok(T data) {
+    public static <T> ApiResult<T> ok(T data, String traceId) {
         return new ApiResult<>(
             true,
             data,
             null,
+            traceId,
             LocalDateTime.now()
         );
     }
 
-    public static <T> ApiResult<T> fail(ApiError error) {
+    public static <T> ApiResult<T> fail(ApiError error, String traceId) {
         return new ApiResult<>(
             false,
             null,
             error,
+            traceId,
             LocalDateTime.now()
         );
     }
