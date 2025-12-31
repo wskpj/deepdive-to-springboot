@@ -2,6 +2,8 @@ rootProject.name = 'deepdive-app'
 
 include 'lib:common-core'
 include 'lib:common-starter'
+include 'lib:trace-core'
+include 'lib:trace-starter'
 include 'lib:event-core'
 include 'lib:event-starter'
 include 'lib:web-core'
