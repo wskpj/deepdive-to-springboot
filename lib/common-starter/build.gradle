@@ -1,5 +1,10 @@
 dependencies {
     api project(':lib:common-core')
-
     implementation 'org.springframework.boot:spring-boot-starter'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
 }

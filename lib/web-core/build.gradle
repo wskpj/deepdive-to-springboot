@@ -1,6 +1,5 @@
 dependencies {
     api project(':lib:common-core')
-
     api 'com.fasterxml.jackson.core:jackson-annotations'
     api 'org.springframework.boot:spring-boot-starter-web'
 }

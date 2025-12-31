@@ -1,3 +1,12 @@
 dependencies {
     api project(':lib:security-core')
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api'
+}
+
+test {
+    useJUnitPlatform()
 }
