@@ -22,7 +22,7 @@ public class ThrowsAspect {
 
             Class<? extends BaseException> targetExceptionClass = throwsAnnotation.value();
 
-            log.warn("Caught and Translating Exception: {} -> {}",
+            log.debug("[Throws Aspect] Caught and Translating Exception: {} -> {}",
                     e.getClass().getSimpleName(),
                     targetExceptionClass.getSimpleName());
 
@@ -30,8 +30,9 @@ public class ThrowsAspect {
             try {
                 wrappedException = translateWrappedException(targetExceptionClass, e);
             } catch (Exception translationEx) {
-                log.warn("Failed to translate exception. Re-throwing original exception. Reason: {}", translationEx.getMessage());
-                throw e; // Handled Original Exception with ExceptionHandleStrategy
+                // Fallback to Original Exception
+                log.warn("[Throws Aspect] Failed to translate exception. Re-throwing original exception. Reason: {}", translationEx.getMessage());
+                throw e; // Handled by ExceptionHandleStrategy
             }
             throw wrappedException;
         }
