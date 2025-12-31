@@ -69,6 +69,12 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         // Contains Request Body
         String payload = extractPayload();
         MDC.put(TraceConstants.PAYLOAD, payload);
+
+        if (log.isDebugEnabled()){
+            log.debug("[Headers] {}", headers);
+            log.debug("[Params] {}", params);
+            log.debug("[Payload] {}", payload);
+        }
     }
 
     private String extractHeaders() {
