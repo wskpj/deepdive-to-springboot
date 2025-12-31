@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import com.example.lib.common.starter.internal.config.CommonStarterConfig;
-import com.example.lib.web.core.ExceptionResponseDispatcher;
-import com.example.lib.web.core.ExceptionResponseMapper;
+import com.example.lib.web.core.dispatcher.ExceptionResponseDispatcher;
+import com.example.lib.web.core.mapper.ExceptionResponseMapper;
 import com.example.lib.web.starter.internal.handler.StandardExceptionHandler;
 
 class WebStarterConfigTest {

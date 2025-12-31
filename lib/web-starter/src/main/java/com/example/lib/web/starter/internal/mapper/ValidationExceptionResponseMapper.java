@@ -5,9 +5,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import com.example.lib.web.core.ApiError;
-import com.example.lib.web.core.ExceptionResponseMapper;
-import com.example.lib.web.core.WebError;
+import com.example.lib.web.core.dto.ApiError;
+import com.example.lib.web.core.exception.WebError;
+import com.example.lib.web.core.mapper.ExceptionResponseMapper;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

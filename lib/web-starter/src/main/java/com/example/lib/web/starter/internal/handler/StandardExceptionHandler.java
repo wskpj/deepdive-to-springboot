@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.trace.core.TraceConstants;
-import com.example.lib.web.core.ApiError;
-import com.example.lib.web.core.ApiResult;
-import com.example.lib.web.core.ExceptionResponseDispatcher;
+import com.example.lib.web.core.dispatcher.ExceptionResponseDispatcher;
+import com.example.lib.web.core.dto.ApiError;
+import com.example.lib.web.core.dto.ApiResult;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

@@ -23,7 +23,7 @@ public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
     @Override
     public void handle(Exception e) {
         String fields = "";
-        
+
         if (e instanceof BindException ex) {
             fields = ex.getFieldErrors().stream()
                     .map(FieldError::getField)

@@ -1,8 +1,9 @@
-package com.example.lib.web.core;
+package com.example.lib.web.core.dto;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.lib.web.core.exception.WebError;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

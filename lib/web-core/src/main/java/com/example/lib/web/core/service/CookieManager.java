@@ -1,4 +1,4 @@
-package com.example.lib.web.core;
+package com.example.lib.web.core.service;
 
 import java.util.Optional;
 

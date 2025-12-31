@@ -1,4 +1,6 @@
-package com.example.lib.web.core;
+package com.example.lib.web.core.mapper;
+
+import com.example.lib.web.core.dto.ApiError;
 
 public interface ExceptionResponseMapper {
 

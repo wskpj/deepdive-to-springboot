@@ -4,9 +4,9 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import com.example.lib.common.core.exception.HandledException;
-import com.example.lib.web.core.ApiError;
-import com.example.lib.web.core.ExceptionResponseMapper;
-import com.example.lib.web.core.WebError;
+import com.example.lib.web.core.dto.ApiError;
+import com.example.lib.web.core.exception.WebError;
+import com.example.lib.web.core.mapper.ExceptionResponseMapper;
 
 @Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class HandledExceptionResponseMapper implements ExceptionResponseMapper {

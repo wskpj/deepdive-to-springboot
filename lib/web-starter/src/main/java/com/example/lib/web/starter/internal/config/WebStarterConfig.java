@@ -11,10 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
-import com.example.lib.web.core.CookieManager;
-import com.example.lib.web.core.ExceptionResponseDispatcher;
-import com.example.lib.web.core.ExceptionResponseMapper;
-import com.example.lib.web.starter.internal.beans.StandardCookieManager;
+import com.example.lib.web.core.dispatcher.ExceptionResponseDispatcher;
+import com.example.lib.web.core.mapper.ExceptionResponseMapper;
+import com.example.lib.web.core.service.CookieManager;
 import com.example.lib.web.starter.internal.dispatcher.DefaultExceptionResponseDispatcher;
 import com.example.lib.web.starter.internal.filter.ResponseFilter;
 import com.example.lib.web.starter.internal.handler.StandardExceptionHandler;
@@ -24,9 +23,12 @@ import com.example.lib.web.starter.internal.mapper.SpringStandardExceptionRespon
 import com.example.lib.web.starter.internal.mapper.SystemExceptionResponseMapper;
 import com.example.lib.web.starter.internal.mapper.UnhandledExceptionResponseMapper;
 import com.example.lib.web.starter.internal.mapper.ValidationExceptionResponseMapper;
+import com.example.lib.web.starter.internal.mapper.WebExceptionResponseMapper;
 import com.example.lib.web.starter.internal.properties.WebProperties;
+import com.example.lib.web.starter.internal.service.StandardCookieManager;
 import com.example.lib.web.starter.internal.strategy.SpringStandardExceptionStrategy;
 import com.example.lib.web.starter.internal.strategy.ValidationExceptionStrategy;
+import com.example.lib.web.starter.internal.strategy.WebExceptionStrategy;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -100,6 +102,12 @@ public class WebStarterConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @ConditionalOnMissingBean(WebExceptionResponseMapper.class)
+    public ExceptionResponseMapper webExceptionResponseMapper() {
+        return new WebExceptionResponseMapper();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(SpringStandardExceptionResponseMapper.class)
     public ExceptionResponseMapper springStandardExceptionResponseMapper() {
         return new SpringStandardExceptionResponseMapper();
@@ -110,14 +118,19 @@ public class WebStarterConfig implements WebMvcConfigurer {
      */
     @Bean
     @ConditionalOnMissingBean(SpringStandardExceptionStrategy.class)
-    public ExceptionHandleStrategy springStandardExceptionStrategy(
-            ExceptionContextTracer tracer) {
-        return new SpringStandardExceptionStrategy(tracer);
+    public ExceptionHandleStrategy springStandardExceptionStrategy() {
+        return new SpringStandardExceptionStrategy();
     }
 
     @Bean
     @ConditionalOnMissingBean(ValidationExceptionStrategy.class)
     public ExceptionHandleStrategy validationExceptionStrategy() {
         return new ValidationExceptionStrategy();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(WebExceptionStrategy.class)
+    public ExceptionHandleStrategy webExceptionStrategy() {
+        return new WebExceptionStrategy();
     }
 }

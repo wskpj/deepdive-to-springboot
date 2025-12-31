@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.example.lib.trace.core.TraceConstants;
-import com.example.lib.web.core.ApiResult;
+import com.example.lib.web.core.dto.ApiResult;
 import com.example.lib.web.starter.internal.filter.ResponseFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -2,9 +2,9 @@ package com.example.lib.web.starter.internal.dispatcher;
 
 import java.util.List;
 
-import com.example.lib.web.core.ApiError;
-import com.example.lib.web.core.ExceptionResponseDispatcher;
-import com.example.lib.web.core.ExceptionResponseMapper;
+import com.example.lib.web.core.dispatcher.ExceptionResponseDispatcher;
+import com.example.lib.web.core.dto.ApiError;
+import com.example.lib.web.core.mapper.ExceptionResponseMapper;
 
 import lombok.RequiredArgsConstructor;
 

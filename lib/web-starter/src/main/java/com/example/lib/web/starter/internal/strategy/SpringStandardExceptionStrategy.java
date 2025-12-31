@@ -11,9 +11,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
-import com.example.lib.trace.core.ExceptionContextTracer;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
-@RequiredArgsConstructor
 public class SpringStandardExceptionStrategy implements ExceptionHandleStrategy {
-
-    private final ExceptionContextTracer tracer;
 
     public static final List<Class<? extends Exception>> TARGET_EXCEPTIONS = List.of(
             HttpMessageNotReadableException.class,         // JSON 파싱 에러
@@ -42,6 +37,5 @@ public class SpringStandardExceptionStrategy implements ExceptionHandleStrategy 
     @Override
     public void handle(Exception e) {
         log.warn("[Handled Spring Exception] {}", e.getClass().getSimpleName());
-        tracer.handle(e);
     }
 }

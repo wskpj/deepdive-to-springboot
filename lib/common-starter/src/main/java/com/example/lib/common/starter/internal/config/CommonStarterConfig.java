@@ -13,7 +13,6 @@ import com.example.lib.common.starter.internal.dispatcher.DefaultExceptionHandle
 import com.example.lib.common.starter.internal.strategy.HandledExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.SystemExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.UnhandledExceptionStrategy;
-import com.example.lib.trace.core.ExceptionContextTracer;
 
 @AutoConfiguration
 public class CommonStarterConfig {
@@ -32,22 +31,19 @@ public class CommonStarterConfig {
 
     @Bean
     @ConditionalOnMissingBean(HandledExceptionStrategy.class)
-    public ExceptionHandleStrategy handledExceptionStrategy(
-        ExceptionContextTracer tracer) {
-        return new HandledExceptionStrategy(tracer);
+    public ExceptionHandleStrategy handledExceptionStrategy() {
+        return new HandledExceptionStrategy();
     }
     
     @Bean
     @ConditionalOnMissingBean(UnhandledExceptionStrategy.class)
-    public ExceptionHandleStrategy unhandledExceptionStrategy(
-        ExceptionContextTracer tracer) {
-        return new UnhandledExceptionStrategy(tracer);
+    public ExceptionHandleStrategy unhandledExceptionStrategy() {
+        return new UnhandledExceptionStrategy();
     }
 
     @Bean
     @ConditionalOnMissingBean(SystemExceptionStrategy.class)
-    public ExceptionHandleStrategy systemExceptionStrategy(
-        ExceptionContextTracer tracer) {
-        return new SystemExceptionStrategy(tracer);
+    public ExceptionHandleStrategy systemExceptionStrategy() {
+        return new SystemExceptionStrategy();
     }
 }

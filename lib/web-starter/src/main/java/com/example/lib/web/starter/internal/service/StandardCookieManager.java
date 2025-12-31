@@ -1,10 +1,10 @@
-package com.example.lib.web.starter.internal.beans;
+package com.example.lib.web.starter.internal.service;
 
 import java.util.Optional;
 
 import org.springframework.http.ResponseCookie;
 
-import com.example.lib.web.core.CookieManager;
+import com.example.lib.web.core.service.CookieManager;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
