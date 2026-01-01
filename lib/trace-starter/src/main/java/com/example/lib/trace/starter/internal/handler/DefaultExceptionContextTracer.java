@@ -31,9 +31,9 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
     @Override
     public void handle(Exception e) {
-        // Collect and store context data in LocalContext (instead of MDC)
-        injectPayload();
+        log.debug("[{}] Tracing Exception Context : {}", this.getClass().getSimpleName(), e.getClass().getSimpleName());
 
+        // Collect and store context data in LocalContext (instead of MDC)
         LocalContext.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
         LocalContext.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
 
@@ -46,21 +46,18 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
             // System Exception (ERROR)
             case SystemException se -> {
                 // Contains Stacktrace
+                injectPayload();
                 LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(se));
             }
 
             // Unhandled Exception (FATAL)
             case Exception ex -> {
                 // Contains Stacktrace
+                injectPayload();
                 LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(ex));
             }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[{}] Exception context enriched for {}",
-                    this.getClass().getSimpleName(),
-                    e.getClass().getSimpleName());
-        }
     }
 
     private String parseStackTrace(Exception e) {
@@ -73,15 +70,12 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         // Contains Request Headers
         String headers = extractHeaders();
         LocalContext.put(TraceConstants.HEADERS, headers);
+        log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
 
-        // Contains Request Body
+        // Contains Request Payload (Body)
         String payload = extractPayload();
         LocalContext.put(TraceConstants.PAYLOAD, payload);
-
-        if (log.isDebugEnabled()) {
-            log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
-            log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
-        }
+        log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
     }
 
     private String extractHeaders() {

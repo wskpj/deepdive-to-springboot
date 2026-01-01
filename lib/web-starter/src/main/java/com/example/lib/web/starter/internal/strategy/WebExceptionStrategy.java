@@ -24,10 +24,10 @@ public class WebExceptionStrategy implements ExceptionHandleStrategy {
 
         switch (we.getErrorType()) {
             case WebError.UNAUTHORIZED, WebError.FORBIDDEN, WebError.TOO_MANY_REQUESTS:
-                log.warn("[Web Exception] {}", we.getErrorType().getCode());
+                log.warn("[Web Exception] {}", we.getErrorType().getMessage());
                 break;
             default:
-                // log.info("[Web Exception] {}", we.getErrorType().getCode());
+                log.info("[Web Exception] {}", we.getErrorType().getMessage());
                 break;
         }
     }
