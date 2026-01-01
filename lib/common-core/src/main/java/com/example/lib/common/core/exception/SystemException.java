@@ -5,6 +5,10 @@ import lombok.Getter;
 @Getter
 public non-sealed class SystemException extends BaseException {
 
+    public SystemException() {
+        super();
+    }
+
     public SystemException(Throwable cause) {
         super(cause);
     }

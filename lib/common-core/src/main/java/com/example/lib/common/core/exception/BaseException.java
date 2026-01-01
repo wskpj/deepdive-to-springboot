@@ -12,18 +12,12 @@ public sealed class BaseException extends RuntimeException permits HandledExcept
     @Setter
     private ExceptionOrigin origin;
 
-    protected BaseException(Throwable cause) {
-        this(new ErrorType() {
-            @Override
-            public String getCode() {
-                return "UNKNOWN_ERROR";
-            }
+    protected BaseException() {
+        this(new UnknownException(), null, null);
+    }
 
-            @Override
-            public String getMessage() {
-                return "Unknown Error";
-            }
-        }, null, cause);
+    protected BaseException(Throwable cause) {
+        this(new UnknownException(), null, cause);
     }
 
     protected BaseException(ErrorType errorType) {
@@ -42,5 +36,17 @@ public sealed class BaseException extends RuntimeException permits HandledExcept
         super(errorType.getMessage(), cause);
         this.errorType = errorType;
         this.details = details;
+    }
+
+    private static class UnknownException implements ErrorType {
+        @Override
+        public String getCode() {
+            return "UNKNOWN_ERROR";
+        }
+
+        @Override
+        public String getMessage() {
+            return "Unknown Error";
+        }
     }
 }
