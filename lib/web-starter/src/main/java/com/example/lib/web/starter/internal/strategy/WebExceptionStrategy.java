@@ -27,7 +27,7 @@ public class WebExceptionStrategy implements ExceptionHandleStrategy {
                 log.warn("[Web Exception] {}", we.getErrorType().getCode());
                 break;
             default:
-                log.info("[Web Exception] {}", we.getErrorType().getCode());
+                // log.info("[Web Exception] {}", we.getErrorType().getCode());
                 break;
         }
     }

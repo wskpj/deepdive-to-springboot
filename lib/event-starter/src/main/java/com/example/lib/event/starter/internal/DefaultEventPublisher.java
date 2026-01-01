@@ -17,13 +17,13 @@ public class DefaultEventPublisher implements EventPublisher {
 
     @Override
     public void publish(BaseEvent event) {
-        log.debug("[EventPublisher] Publish Event Type: {}, ID: {}", event.getEventType(), event.getEventId());
+        log.debug("[{}] Publish Event Type: {}, ID: {}", this.getClass().getSimpleName(), event.getEventType(), event.getEventId());
         applicationEventPublisher.publishEvent(event);
     }
     
     @Async
     public void publishAsync(BaseEvent event) {
-        log.debug("[EventPublisher] Publish Async Event Type: {}, ID: {}", event.getEventType(), event.getEventId());
+        log.debug("[{}] Publish Async Event Type: {}, ID: {}", this.getClass().getSimpleName(), event.getEventType(), event.getEventId());
         applicationEventPublisher.publishEvent(event);
     }
 }

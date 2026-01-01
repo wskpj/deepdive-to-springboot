@@ -22,7 +22,8 @@ public class ThrowsAspect {
 
             Class<? extends BaseException> targetExceptionClass = throwsAnnotation.value();
 
-            log.debug("[Throws Aspect] Caught and Translating Exception: {} -> {}",
+            log.debug("[{}] Caught and Translating Exception: {} -> {}",
+                    this.getClass().getSimpleName(),
                     e.getClass().getSimpleName(),
                     targetExceptionClass.getSimpleName());
 

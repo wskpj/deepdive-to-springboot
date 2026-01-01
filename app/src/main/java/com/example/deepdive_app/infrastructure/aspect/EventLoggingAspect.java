@@ -17,6 +17,6 @@ public class EventLoggingAspect {
 
     @Before(value = "eventPublishPointcut(event)", argNames = "event")
     public void logEventPublish(BaseEvent event) {
-        log.debug("[EventPublisherAspect] Type: {}, ID: {}", event.getEventType(), event.getEventId());
+        log.debug("[{}] Type: {}, ID: {}", this.getClass().getSimpleName(), event.getEventType(), event.getEventId());
     }
 }

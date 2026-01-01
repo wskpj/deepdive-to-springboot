@@ -32,7 +32,7 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     public void handle(Exception e) {
         injectPayload();
 
-        MDC.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getName());
+        MDC.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
         MDC.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
 
         switch (e) {
@@ -71,8 +71,8 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         MDC.put(TraceConstants.PAYLOAD, payload);
 
         if (log.isDebugEnabled()){
-            log.debug("[Headers] {}", headers);
-            log.debug("[Payload] {}", payload);
+            log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
+            log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
         }
     }
 
