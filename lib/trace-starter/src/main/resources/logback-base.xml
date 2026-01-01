@@ -9,7 +9,7 @@
 
     <!-- Text Console Logging Pattern -->
     <property name="CONSOLE_TEXT_PATTERN" 
-              value="%clr(%d{HH:mm:ss.SSS}){faint} %clr([%15.15t]){faint} %clr(---){faint} %clr(%-35.35(%logger{30}:%L)){cyan} %clr(%5p) %clr([%X{traceId:-SYSTEM}]){faint} %m %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+              value="%clr([%8.8t]){faint} %clr(---){faint} %clr([%X{traceId:-SYSTEM}]){faint} %clr(%-30.30(%logger{0}:%L)){cyan} %clr(%5p) %m %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
 
     <!-- Text Console Appender -->
     <appender name="CONSOLE_TEXT" class="ch.qos.logback.core.ConsoleAppender">

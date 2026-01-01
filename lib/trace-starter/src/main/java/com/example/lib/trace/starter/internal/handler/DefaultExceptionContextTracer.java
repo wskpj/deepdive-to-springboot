@@ -7,12 +7,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.MDC;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 
+import com.example.lib.common.core.context.LocalContext;
 import com.example.lib.common.core.exception.HandledException;
 import com.example.lib.common.core.exception.SystemException;
 import com.example.lib.trace.core.ExceptionContextTracer;
@@ -29,29 +29,37 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
     private final HttpServletRequest request;
 
+    @Override
     public void handle(Exception e) {
+        // Collect and store context data in LocalContext (instead of MDC)
         injectPayload();
 
-        MDC.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
-        MDC.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
+        LocalContext.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
+        LocalContext.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
 
         switch (e) {
             // Handled Exception (WARN)
             case HandledException he -> {
-                // Not Contains Stacktace
+                // Not Contains Stacktrace
             }
 
             // System Exception (ERROR)
             case SystemException se -> {
                 // Contains Stacktrace
-                MDC.put(TraceConstants.STACK_TRACE, parseStackTrace(se));
+                LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(se));
             }
 
             // Unhandled Exception (FATAL)
             case Exception ex -> {
                 // Contains Stacktrace
-                MDC.put(TraceConstants.STACK_TRACE, parseStackTrace(ex));
+                LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(ex));
             }
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("[{}] Exception context enriched for {}",
+                    this.getClass().getSimpleName(),
+                    e.getClass().getSimpleName());
         }
     }
 
@@ -64,13 +72,13 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     private void injectPayload() {
         // Contains Request Headers
         String headers = extractHeaders();
-        MDC.put(TraceConstants.HEADERS, headers);
+        LocalContext.put(TraceConstants.HEADERS, headers);
 
         // Contains Request Body
         String payload = extractPayload();
-        MDC.put(TraceConstants.PAYLOAD, payload);
+        LocalContext.put(TraceConstants.PAYLOAD, payload);
 
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
             log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
         }
@@ -83,19 +91,14 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
             Map<String, String> map = new HashMap<>();
             while (names.hasMoreElements()) {
                 String name = names.nextElement();
-                if (name.equalsIgnoreCase("cookie") || name.equalsIgnoreCase("authorization")) continue;
+                if (name.equalsIgnoreCase("cookie") || name.equalsIgnoreCase("authorization"))
+                    continue;
                 map.put(name, request.getHeader(name));
             }
             return map.toString();
         }
 
         return "{}";
-    }
-
-    @Deprecated
-    private String extractParams() {
-        String params = request.getQueryString();
-        return params == null ? "{}" : params;
     }
 
     private String extractPayload() {
@@ -110,8 +113,10 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     }
 
     private ContentCachingRequestWrapper getWrapper() {
-        HttpServletRequest currentRequest = (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes)
-                ? attributes.getRequest() : request;
+        HttpServletRequest currentRequest = (RequestContextHolder
+                .getRequestAttributes() instanceof ServletRequestAttributes attributes)
+                        ? attributes.getRequest()
+                        : request;
 
         return WebUtils.getNativeRequest(currentRequest, ContentCachingRequestWrapper.class);
     }
