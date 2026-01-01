@@ -33,8 +33,8 @@ public sealed class BaseException extends RuntimeException permits HandledExcept
     }
 
     protected BaseException(ErrorType errorType, Object details, Throwable cause) {
-        super(errorType.getMessage(), cause);
-        this.errorType = errorType;
+        super(errorType == null ? "Unknown Error" : errorType.getMessage(), cause);
+        this.errorType = errorType == null ? new UnknownException() : errorType;
         this.details = details;
     }
 
