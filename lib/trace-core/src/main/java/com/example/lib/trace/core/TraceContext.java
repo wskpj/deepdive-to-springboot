@@ -1,5 +1,9 @@
 package com.example.lib.trace.core;
 
+/**
+ * 현재 스레드의 트레이싱에 사용되는 상태를 보관하는 컨텍스트
+ * ThreadLocal을 사용하여 동시성 이슈 없이 계층 정보를 유지
+ */
 public class TraceContext {
 
     private static final ThreadLocal<Integer> depthHolder = ThreadLocal.withInitial(() -> 0);

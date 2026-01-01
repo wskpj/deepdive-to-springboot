@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Represents the status of a single trace point.
+ * 단일 트레이스 지점(메서드 실행 단위)의 상태 정보를 담는 객체
+ * 고유 ID, 계층 깊이(Depth), 소요 시간 및 Span 정보를 보관합니다.
  */
 @Getter
 @RequiredArgsConstructor

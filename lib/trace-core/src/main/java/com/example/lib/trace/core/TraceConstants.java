@@ -1,5 +1,8 @@
 package com.example.lib.trace.core;
 
+/**
+ * 트레이싱, 로깅(MDC 등) 과정에서 컨텍스트 맵의 Key로 사용되는 상수 모음.
+ */
 public final class TraceConstants {    
     // Info
     public static final String TRACE_ID = "traceId";
