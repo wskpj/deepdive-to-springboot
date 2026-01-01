@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
+import com.example.lib.common.starter.internal.aspect.ExceptionOriginAspect;
 import com.example.lib.common.starter.internal.aspect.ThrowsAspect;
 import com.example.lib.common.starter.internal.dispatcher.DefaultExceptionHandleDispatcher;
 import com.example.lib.common.starter.internal.strategy.HandledExceptionStrategy;
@@ -20,6 +21,11 @@ public class CommonStarterConfig {
     @Bean
     public ThrowsAspect throwsAspect() {
         return new ThrowsAspect();
+    }
+
+    @Bean
+    public ExceptionOriginAspect exceptionOriginAspect() {
+        return new ExceptionOriginAspect();
     }
 
     @Bean
