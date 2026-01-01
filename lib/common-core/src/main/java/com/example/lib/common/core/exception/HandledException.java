@@ -6,31 +6,49 @@ import lombok.Getter;
 public non-sealed class HandledException extends BaseException {
 
     public HandledException() {
-        super();
+        this(null, null, null);
     }
 
     public HandledException(Throwable cause) {
-        super(cause);
+        this(null, null, cause);
     }
 
     public HandledException(ErrorType errorType) {
-        super(errorType);
+        this(errorType, null, null);
     }
 
     public HandledException(ErrorType errorType, Object details) {
-        super(errorType, details, null);
+        this(errorType, details, null);
     }
 
     public HandledException(ErrorType errorType, Throwable cause) {
-        super(errorType, null, cause);
+        this(errorType, null, cause);
     }
 
     public HandledException(ErrorType errorType, Object details, Throwable cause) {
-        super(errorType, details, cause);
+        super(errorType == null ? new DefaultHandledError() : errorType, details, cause);
     }
 
     @Override
     public synchronized Throwable fillInStackTrace() {
         return this;
+    }
+
+    private static class DefaultHandledError implements ErrorType {
+
+        @Override
+        public String getCode() {
+            return "UNKNOWN_HANDLED_ERROR";
+        }
+
+        @Override
+        public String getMessage() {
+            return "Unknown Handled Error";
+        }
+
+        @Override
+        public ErrorLevel getLogLevel() {
+            return ErrorLevel.WARN;
+        }
     }
 }

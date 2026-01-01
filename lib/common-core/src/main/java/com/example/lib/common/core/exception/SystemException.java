@@ -6,26 +6,44 @@ import lombok.Getter;
 public non-sealed class SystemException extends BaseException {
 
     public SystemException() {
-        super();
+        this(null, null, null);
     }
 
     public SystemException(Throwable cause) {
-        super(cause);
+        this(null, null, cause);
     }
 
     public SystemException(ErrorType errorType) {
-        super(errorType);
+        this(errorType, null, null);
     }
 
     public SystemException(ErrorType errorType, Object details) {
-        super(errorType, details);
+        this(errorType, details, null);
     }
 
     public SystemException(ErrorType errorType, Throwable cause) {
-        super(errorType, cause);
+        this(errorType, null, cause);
     }
 
     public SystemException(ErrorType errorType, Object details, Throwable cause) {
-        super(errorType, details, cause);
+        super(errorType == null ? new DefaultSystemException() : errorType, details, cause);
+    }
+
+    private static class DefaultSystemException implements ErrorType {
+
+        @Override
+        public String getCode() {
+            return "UNKNOWN_SYSTEM_ERROR";
+        }
+
+        @Override
+        public String getMessage() {
+            return "Unknown System Error";
+        }
+
+        @Override
+        public ErrorLevel getLogLevel() {
+            return ErrorLevel.ERROR;
+        }
     }
 }
