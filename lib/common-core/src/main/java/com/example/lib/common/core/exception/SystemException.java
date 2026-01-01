@@ -2,6 +2,10 @@ package com.example.lib.common.core.exception;
 
 import lombok.Getter;
 
+/**
+ * 예상된 시스템 예외
+ * 애플리케이션에서 시스템 예외로 상속해서 사용하거나, SystemException 생성자를 직접 호출해서 사용
+ */
 @Getter
 public non-sealed class SystemException extends BaseException {
 

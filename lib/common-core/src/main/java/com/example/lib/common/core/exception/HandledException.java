@@ -2,6 +2,10 @@ package com.example.lib.common.core.exception;
 
 import lombok.Getter;
 
+/**
+ * 예상된 비즈니스 로직 예외
+ * 애플리케이션에서 비즈니스 예외로 상속해서 사용하거나, HandledException 생성자를 직접 호출해서 사용
+ */
 @Getter
 public non-sealed class HandledException extends BaseException {
 

@@ -3,6 +3,10 @@ package com.example.lib.common.core.exception;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 모든 커스텀 예외의 상위 클래스
+ * 컴파일 시점에서 HandledException과 SystemException만 상속받도록 제한함
+ */
 @Getter
 public sealed class BaseException extends RuntimeException permits HandledException, SystemException {
 

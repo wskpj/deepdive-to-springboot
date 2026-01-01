@@ -3,6 +3,9 @@ package com.example.lib.common.core.context;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ThreadLocal을 이용하여 로컬 컨텍스트를 관리하는 클래스
+ */
 public class LocalContext {
 
     private static final ThreadLocal<Map<String, Object>> storage = ThreadLocal.withInitial(HashMap::new);
