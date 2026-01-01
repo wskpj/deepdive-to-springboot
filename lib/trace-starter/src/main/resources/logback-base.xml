@@ -22,11 +22,53 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
-    <!-- JSON File Appender -->
+    <!-- JSON File Appender for local -->
     <!-- !Required: net.logstash.logback:logstash-logback-encoder -->
     <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/app-json.log</file>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!-- Timestamp -->
+                <timestamp>
+                    <timeZone>Asia/Seoul</timeZone>
+                </timestamp>
+
+                <!-- Log Main Fields -->
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>elapsedTime</includeMdcKeyName>
+                    <includeMdcKeyName>status</includeMdcKeyName>
+                    <includeMdcKeyName>method</includeMdcKeyName>
+                    <includeMdcKeyName>uri</includeMdcKeyName>
+                    <includeMdcKeyName>params</includeMdcKeyName>
+                </mdc>
+
+                <!-- Log Meatdata -->
+                <logLevel/>
+                <logLevelValue/>
+                <loggerName/>
+                <message/>
+
+                <!-- Host Metadata -->
+                <hostname/>
+                <pid/>
+                <threadName/>
+
+                <!-- Remain MDC -->
+                <mdc>
+                    <includeMdcKeyName>exceptionClass</includeMdcKeyName>
+                    <includeMdcKeyName>exceptionMessage</includeMdcKeyName>
+                    <includeMdcKeyName>stackTrace</includeMdcKeyName>
+                    <includeMdcKeyName>headers</includeMdcKeyName>
+                    <includeMdcKeyName>payload</includeMdcKeyName>
+                    <includeMdcKeyName>clientIp</includeMdcKeyName>
+                    <includeMdcKeyName>userAgent</includeMdcKeyName>
+                </mdc>
+
+                <!-- !Stacktrace Included in MDC-->
+            </providers>
+        </encoder>
+
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/app-json.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>

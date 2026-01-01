@@ -66,17 +66,12 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         String headers = extractHeaders();
         MDC.put(TraceConstants.HEADERS, headers);
 
-        // Contains Request Params
-        String params = extraceParams();
-        MDC.put(TraceConstants.PARAMS, params);
-
         // Contains Request Body
         String payload = extractPayload();
         MDC.put(TraceConstants.PAYLOAD, payload);
 
         if (log.isDebugEnabled()){
             log.debug("[Headers] {}", headers);
-            log.debug("[Params] {}", params);
             log.debug("[Payload] {}", payload);
         }
     }
@@ -97,7 +92,8 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         return "{}";
     }
 
-    private String extraceParams() {
+    @Deprecated
+    private String extractParams() {
         String params = request.getQueryString();
         return params == null ? "{}" : params;
     }

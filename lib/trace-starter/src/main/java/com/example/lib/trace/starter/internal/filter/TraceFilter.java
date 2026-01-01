@@ -27,7 +27,10 @@ public class TraceFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
+        HttpServletRequest wrappedRequest = request;
+        if (isCacheable(request)) {
+            wrappedRequest = new ContentCachingRequestWrapper(request);
+        }
 
         String traceId = traceIdGenerator.generate();
         String method = request.getMethod();
@@ -52,10 +55,24 @@ public class TraceFilter extends OncePerRequestFilter {
             int status = response.getStatus();
 
             MDC.put(TraceConstants.STATUS, String.valueOf(status));
-            MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(elapsedTime)); // ms
+            MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(elapsedTime));
             log.info("{} {} {} - {}ms", status, method, uri, elapsedTime);
 
             MDC.clear();
         }
+    }
+
+    private boolean isCacheable(HttpServletRequest request) {
+        String method = request.getMethod();
+        String contentType = request.getContentType();
+
+        // Skip multipart (file uploads) to avoid OOM
+        if (contentType != null && contentType.toLowerCase().contains("multipart/form-data")) {
+            return false;
+        }
+
+        return "POST".equalsIgnoreCase(method) ||
+               "PUT".equalsIgnoreCase(method) ||
+               "PATCH".equalsIgnoreCase(method);
     }
 }
