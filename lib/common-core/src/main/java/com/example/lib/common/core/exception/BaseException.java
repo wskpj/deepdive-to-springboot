@@ -1,12 +1,16 @@
 package com.example.lib.common.core.exception;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public sealed class BaseException extends RuntimeException permits HandledException, SystemException {
 
     protected final ErrorType errorType;
     protected final Object details;
+
+    @Setter
+    private ExceptionOrigin origin;
 
     protected BaseException(Throwable cause) {
         this(new ErrorType() {
