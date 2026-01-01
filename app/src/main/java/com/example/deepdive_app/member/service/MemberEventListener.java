@@ -23,8 +23,6 @@ public class MemberEventListener {
     @EventListener
     @Transactional
     public void onAccountCreated(AccountCreatedEvent event) {
-        log.info("[MemberEventListener] Creating profile for account: {}", event.getAccountId());
-
         Member member = Member.builder()
                 .name(event.getName())
                 .role(MemberRole.USER)
@@ -33,7 +31,5 @@ public class MemberEventListener {
 
         Member savedMember = memberRepository.save(member);
         event.setMemberId(savedMember.getId());
-        
-        log.info("[MemberEventListener] Profile created for member: {}", savedMember.getName());
     }
 }

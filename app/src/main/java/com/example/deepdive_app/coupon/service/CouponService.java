@@ -11,6 +11,9 @@ import com.example.deepdive_app.coupon.repository.CouponIssueRepository;
 import com.example.deepdive_app.coupon.repository.CouponRepository;
 import com.example.deepdive_app.global.base.BaseService;
 import com.example.deepdive_app.member.repository.MemberRepository;
+import com.example.lib.common.core.annotation.Throws;
+import com.example.lib.web.core.exception.BadRequestException;
+import com.example.lib.web.core.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,20 +26,19 @@ public class CouponService implements BaseService<CouponDTO, Coupon, Long> {
     private final MemberRepository memberRepository;
 
     @Transactional
+    @Throws(BadRequestException.class)
     public CouponDTO issue(Long couponId, Long memberId) {
         // 1. 멤버 확인 (간단하게 존재 여부만)
         memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(NotFoundException::new);
 
         // 2. 쿠폰 확인
         Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new RuntimeException("Coupon not found"));
+                .orElseThrow(NotFoundException::new);
 
         // 3. 중복 발급 확인
         couponIssueRepository.findByMemberIdAndCouponId(memberId, couponId)
-                .ifPresent(ci -> {
-                    throw new RuntimeException("Coupon already issued to this member");
-                });
+                .ifPresent(ci -> {throw new BadRequestException();});
 
         // 4. 발급 처리 (수량 감소 및 내역 저장)
         coupon.issue();
