@@ -8,6 +8,10 @@ import com.example.lib.redis.core.binding.KeyBinding;
 import com.example.lib.redis.core.binding.ValueBinding;
 import com.example.lib.redis.core.key.RedisStringKey;
 
+/**
+ * RedisStringKey에 정의된 포맷에 맞춰 레디스의 String(문자열) 자료구조를 제어하는 오퍼레이터
+ * get, set, increment, setIfAbsent 등 문자열 및 카운터 특화 연산을 제공합니다.
+ */
 @SuppressWarnings("null")
 public class StandardRedisStringOperator extends AbstractRedisOperator<RedisStringKey> {
 

@@ -13,6 +13,10 @@ import com.example.lib.redis.starter.internal.operator.StandardRedisSetOperator;
 import com.example.lib.redis.starter.internal.operator.StandardRedisStringOperator;
 import com.example.lib.redis.starter.internal.script.StandardRedisScriptExecutor;
 
+/**
+ * 레디스 모듈(redis-starter)의 자동 구성(AutoConfiguration) 클래스
+ * RedisTemplate 및 각종 자료구조별 오퍼레이터 빈을 등록합니다.
+ */
 @AutoConfiguration
 public class RedisStarterConfig {
 

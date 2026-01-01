@@ -9,6 +9,10 @@ import com.example.lib.redis.core.binding.KeyBinding;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 레디스(Redis)의 모든 자료구조에서 공통적으로 사용 가능한 연산(Key 존재 여부, 만료 시간, 삭제 등)을 
+ * 캡슐화한 최상위 오퍼레이터 추상 클래스
+ */
 @RequiredArgsConstructor
 @SuppressWarnings("null")
 public abstract class AbstractRedisOperator<K extends RedisKey> {
