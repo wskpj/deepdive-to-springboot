@@ -1,0 +1,31 @@
+package com.example.lib.common.core.context;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+public class LocalContext {
+
+    private static final ThreadLocal<Map<String, Object>> storage = ThreadLocal.withInitial(HashMap::new);
+
+    public static void put(String key, Object value) {
+        if (value == null) {
+            storage.get().remove(key);
+        } else {
+            storage.get().put(key, value);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T get(String key) {
+        return (T) storage.get().get(key);
+    }
+
+    public static Map<String, Object> getAll() {
+        return Collections.unmodifiableMap(new HashMap<>(storage.get()));
+    }
+
+    public static void clear() {
+        storage.remove();
+    }
+}

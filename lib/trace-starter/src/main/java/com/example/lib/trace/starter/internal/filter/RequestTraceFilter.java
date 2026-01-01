@@ -6,6 +6,7 @@ import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import com.example.lib.common.core.context.LocalContext;
 import com.example.lib.trace.core.TraceConstants;
 import com.example.lib.trace.core.TraceIdGenerator;
 
@@ -58,6 +59,7 @@ public class RequestTraceFilter extends OncePerRequestFilter {
             MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(elapsedTime));
             log.info("{} {} {} - {}ms from {}", status, method, uri, elapsedTime, clientIp);
 
+            LocalContext.clear();
             MDC.clear();
         }
     }
