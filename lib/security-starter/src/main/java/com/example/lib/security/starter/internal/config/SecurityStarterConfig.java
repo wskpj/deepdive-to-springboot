@@ -9,6 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * 보안 모듈(security-starter)의 자동 구성(AutoConfiguration) 클래스
+ * 기본 보안 필터 체인(SecurityFilterChain) 및 비밀번호 암호화(PasswordEncoder) 빈을 등록합니다.
+ */
 @AutoConfiguration
 @EnableWebSecurity
 public class SecurityStarterConfig {

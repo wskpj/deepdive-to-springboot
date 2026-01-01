@@ -10,6 +10,10 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+/**
+ * Swagger(SpringDoc OpenAPI) 문서화를 위한 자동 구성(AutoConfiguration) 클래스
+ * 전역 인증 설정(JWT) 및 API 그룹화 설정을 제공합니다.
+ */
 @AutoConfiguration
 public class SwaggerStarterConfig {
 
