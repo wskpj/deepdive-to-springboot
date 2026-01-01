@@ -13,8 +13,9 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 
 import com.example.lib.common.core.context.LocalContext;
-import com.example.lib.common.core.exception.HandledException;
-import com.example.lib.common.core.exception.SystemException;
+import com.example.lib.common.core.exception.BaseException;
+import com.example.lib.common.core.exception.ErrorLevel;
+import com.example.lib.common.core.exception.ExceptionOrigin;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
 
@@ -36,37 +37,46 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
         // Collect and store context data in LocalContext (instead of MDC)
         LocalContext.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
         LocalContext.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
+        collectExceptionOrigin(e);
 
-        switch (e) {
-            // Handled Exception (WARN)
-            case HandledException he -> {
-                // Not Contains Stacktrace
-            }
+        ErrorLevel level = (e instanceof BaseException be) ? be.getLogLevel() : ErrorLevel.ERROR;
 
-            // System Exception (ERROR)
-            case SystemException se -> {
-                // Contains Stacktrace
-                injectPayload();
-                LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(se));
-            }
+        if (level.isShouldCollectStackTrace()) {
+            collectStackTrace(e);
+        }
+        if (level.isShouldCollectPayload()) {
+            collectPayload();
+        }
+    }
 
-            // Unhandled Exception (FATAL)
-            case Exception ex -> {
-                // Contains Stacktrace
-                injectPayload();
-                LocalContext.put(TraceConstants.STACK_TRACE, parseStackTrace(ex));
+    private void collectExceptionOrigin(Exception e) {
+        if (e instanceof BaseException be && be.getOrigin() != null) {
+            ExceptionOrigin origin = be.getOrigin();
+            LocalContext.put(TraceConstants.EXCEPTION_ORIGIN, origin.toString());
+            log.debug("[{}] Trace Origin: {}:{} {}()", this.getClass().getSimpleName(), 
+                origin.className(), origin.lineNumber(), origin.methodName());
+        } else {
+            // Standard Exception / No Origin yet: Search StackTrace
+            for (StackTraceElement ste : e.getStackTrace()) {
+                String cn = ste.getClassName();
+                if (cn.startsWith("com.example") && !cn.endsWith("Exception") && !cn.contains("BaseException")) {
+                    log.debug("[{}] Trace Origin (Estimated): {}:{} {}()", this.getClass().getSimpleName(),
+                            cn, ste.getLineNumber(), ste.getMethodName());
+                    LocalContext.put(TraceConstants.EXCEPTION_ORIGIN, String.format("%s:%d %s()", cn, ste.getLineNumber(), ste.getMethodName()));
+                    break;
+                }
             }
         }
-
     }
 
-    private String parseStackTrace(Exception e) {
+    private void collectStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-        return sw.toString();
+
+        LocalContext.put(TraceConstants.STACK_TRACE, sw.toString());
     }
 
-    private void injectPayload() {
+    private void collectPayload() {
         // Contains Request Headers
         String headers = extractHeaders();
         LocalContext.put(TraceConstants.HEADERS, headers);

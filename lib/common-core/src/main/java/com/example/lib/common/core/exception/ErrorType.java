@@ -5,4 +5,8 @@ public interface ErrorType {
     String getCode();
 
     String getMessage();
+
+    default ErrorLevel getLogLevel() {
+        return ErrorLevel.ERROR;
+    }
 }

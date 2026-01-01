@@ -1,8 +1,10 @@
 package com.example.lib.common.starter.internal.strategy;
 
+import org.slf4j.event.Level;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
+import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.SystemException;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 
@@ -19,7 +21,8 @@ public class SystemExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
     public void handle(Exception e) {
-        SystemException ex = (SystemException) e;
-        log.error("[System Exception] {}", ex.getErrorType().getCode());
+        BaseException ex = (BaseException) e;
+        log.atLevel(Level.valueOf(ex.getLogLevel().name()))
+           .log("[System Exception] {}", ex.getErrorType().getCode());
     }
 }

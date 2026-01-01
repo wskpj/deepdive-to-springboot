@@ -38,6 +38,10 @@ public sealed class BaseException extends RuntimeException permits HandledExcept
         this.details = details;
     }
 
+    public ErrorLevel getLogLevel() {
+        return errorType.getLogLevel();
+    }
+
     private static class UnknownException implements ErrorType {
         @Override
         public String getCode() {
@@ -47,6 +51,11 @@ public sealed class BaseException extends RuntimeException permits HandledExcept
         @Override
         public String getMessage() {
             return "Unknown Error";
+        }
+
+        @Override
+        public ErrorLevel getLogLevel() {
+            return ErrorLevel.ERROR;
         }
     }
 }

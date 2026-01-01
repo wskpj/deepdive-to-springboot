@@ -19,8 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Order(1)
 public class ExceptionOriginAspect {
 
-    @AfterThrowing(pointcut = "within(com.example..*) && !within(*..*Properties)", throwing = "be")
-    public void captureOrigin(JoinPoint joinPoint, BaseException be) {
+    @AfterThrowing(pointcut = "within(com.example..*) && !within(*..*Properties)", throwing = "ex")
+    public void captureOrigin(JoinPoint joinPoint, Exception ex) {
+        log.debug("[{}] Exception Caught and Extracting Origin for Exception: {}", this.getClass().getSimpleName(), ex.getClass().getSimpleName());
+        
+        if (!(ex instanceof BaseException be)) return;
         if (be.getOrigin() != null) return;
 
         try {
@@ -28,10 +31,12 @@ public class ExceptionOriginAspect {
                 String cn = ste.getClassName();
                 if (cn.startsWith("com.example") && !cn.endsWith("Exception") && !cn.contains("BaseException")) {
                     be.setOrigin(new ExceptionOrigin(cn, ste.getMethodName(), ste.getLineNumber(), extractArguments(joinPoint)));
+                    log.info("[{}] Successfully Extracted Exception Origin from {}",this.getClass().getSimpleName(), be.getOrigin());
                     return;
                 }
             }
         } catch (Exception ignored) {
+            log.warn("[{}] Failed to Extract Exception Origin from {}",this.getClass().getSimpleName(), be.getMessage());
         }
     }
 

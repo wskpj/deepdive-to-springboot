@@ -14,6 +14,7 @@ import com.example.lib.common.starter.internal.dispatcher.DefaultExceptionHandle
 import com.example.lib.common.starter.internal.strategy.HandledExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.SystemExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.UnhandledExceptionStrategy;
+import com.example.lib.trace.core.ExceptionContextTracer;
 
 @AutoConfiguration
 public class CommonStarterConfig {
@@ -31,8 +32,9 @@ public class CommonStarterConfig {
     @Bean
     @ConditionalOnMissingBean(ExceptionHandleDispatcher.class)
     public ExceptionHandleDispatcher exceptionHandleDispatcher(
-        List<ExceptionHandleStrategy> strategies) {
-        return new DefaultExceptionHandleDispatcher(strategies);
+        List<ExceptionHandleStrategy> strategies,
+        ExceptionContextTracer tracer) {
+        return new DefaultExceptionHandleDispatcher(strategies, tracer);
     }
 
     @Bean
