@@ -16,12 +16,12 @@ public class debugController {
   
     @GetMapping("/exception/handled")
     public void triggerHandledException() {
-        throw new HandledException(null, null);
+        throw new HandledException();
     }
 
     @GetMapping("/exception/system")
     public void triggerSystemException() {
-        throw new SystemException(null, null);
+        throw new SystemException();
     }
 
     @GetMapping("/exception/unhandled")
