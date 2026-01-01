@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @SuppressWarnings("null")
-public class TraceFilter extends OncePerRequestFilter {
+public class RequestTraceFilter extends OncePerRequestFilter {
 
     private final TraceIdGenerator traceIdGenerator;
 
@@ -56,7 +56,7 @@ public class TraceFilter extends OncePerRequestFilter {
 
             MDC.put(TraceConstants.STATUS, String.valueOf(status));
             MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(elapsedTime));
-            log.info("{} {} {} - {}ms", status, method, uri, elapsedTime);
+            log.info("{} {} {} - {}ms from {}", status, method, uri, elapsedTime, clientIp);
 
             MDC.clear();
         }

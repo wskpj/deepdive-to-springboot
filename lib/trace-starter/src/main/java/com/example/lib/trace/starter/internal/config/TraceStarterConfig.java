@@ -12,7 +12,7 @@ import com.example.lib.trace.core.TraceIdGenerator;
 import com.example.lib.trace.starter.internal.aspect.AsyncExecutionAspect;
 import com.example.lib.trace.starter.internal.aspect.ExceptionTraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
-import com.example.lib.trace.starter.internal.filter.TraceFilter;
+import com.example.lib.trace.starter.internal.filter.RequestTraceFilter;
 import com.example.lib.trace.starter.internal.generator.UuidTraceIdGenerator;
 import com.example.lib.trace.starter.internal.handler.DefaultExceptionContextTracer;
 
@@ -23,9 +23,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class TraceStarterConfig {
 
     @Bean
-    public FilterRegistrationBean<TraceFilter> traceFilterRegistration(TraceIdGenerator traceIdGenerator) {
-        FilterRegistrationBean<TraceFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new TraceFilter(traceIdGenerator));
+    public FilterRegistrationBean<RequestTraceFilter> traceFilterRegistration(TraceIdGenerator traceIdGenerator) {
+        FilterRegistrationBean<RequestTraceFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RequestTraceFilter(traceIdGenerator));
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); // first order
         return registrationBean;
