@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.slf4j.MDC;
 
 import com.example.lib.common.core.context.LocalContext;
+import com.example.lib.trace.core.TraceContext;
 import com.example.lib.trace.core.LogTrace;
 import com.example.lib.trace.core.TraceConstants;
 import com.example.lib.trace.core.TraceIdGenerator;
@@ -42,7 +43,7 @@ public class ThreadLocalLogTrace implements LogTrace {
             MDC.put(TraceConstants.PARENT_SPAN_ID, parentSpanId);
         }
 
-        int depth = LocalContext.incrementDepth();
+        int depth = TraceContext.incrementDepth();
         MDC.put(TraceConstants.DEPTH, String.valueOf(depth));
         
         String logMessage = String.format("[%s] %s %s", traceId, getSymbols(">", depth + 1), message);
@@ -68,7 +69,7 @@ public class ThreadLocalLogTrace implements LogTrace {
         long totalTimeMillis = stopTimeMillis - status.getStartTimeMillis();
         long selfTimeMillis = totalTimeMillis - status.getChildExecutionTime();
         
-        LocalContext.decrementDepth();
+        TraceContext.decrementDepth();
         Deque<TraceStatus> stack = stackHolder.get();
         if (!stack.isEmpty()) {
             stack.pop(); // Remove self
@@ -102,7 +103,7 @@ public class ThreadLocalLogTrace implements LogTrace {
         MDC.remove(TraceConstants.ELAPSED_TIME);
         
         // Restore/Update Depth in MDC for parent context
-        int currentDepth = LocalContext.getDepth();
+        int currentDepth = TraceContext.getDepth();
         if (currentDepth >= 0) {
             MDC.put(TraceConstants.DEPTH, String.valueOf(currentDepth));
         } else {
@@ -135,6 +136,13 @@ public class ThreadLocalLogTrace implements LogTrace {
             MDC.put(TraceConstants.TRACE_ID, traceId);
             LocalContext.put(TraceConstants.TRACE_ID, traceId);
         }
+    }
+
+    @Override
+    public void destroy() {
+        TraceContext.clear();
+        stackHolder.remove();
+        MDC.clear();
     }
 
     private String getSymbols(String symbol, int count) {

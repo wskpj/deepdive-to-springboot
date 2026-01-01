@@ -58,8 +58,8 @@ public class RequestTraceFilter extends OncePerRequestFilter {
                 logTrace.end(status, String.format("[%d]", httpStatus));
             }
             
+            logTrace.destroy();
             LocalContext.clear();
-            MDC.clear();
         }
     }
 

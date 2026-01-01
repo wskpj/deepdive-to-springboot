@@ -1,6 +1,5 @@
 package com.example.lib.common.core.context;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,28 +26,5 @@ public class LocalContext {
 
     public static void clear() {
         storage.remove();
-    }
-
-    public static int incrementDepth() {
-        int depth = get("trace_depth", 0);
-        put("trace_depth", depth + 1);
-        return depth;
-    }
-
-    public static void decrementDepth() {
-        int depth = get("trace_depth", 0);
-        if (depth > 0) {
-            put("trace_depth", depth - 1);
-        }
-    }
-
-    public static int getDepth() {
-        return get("trace_depth", 0);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T get(String key, T defaultValue) {
-        Object value = storage.get().get(key);
-        return value != null ? (T) value : defaultValue;
     }
 }
