@@ -39,10 +39,19 @@
 
                 <!-- Log Main Fields -->
                 <mdc>
-                    <includeMdcKeyName>traceId</includeMdcKeyName>                
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                </mdc>
+                <mdc>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+                <mdc>
+                    <includeMdcKeyName>parentSpanId</includeMdcKeyName>
                 </mdc>
                 <mdc>
                     <includeMdcKeyName>elapsedTime</includeMdcKeyName>
+                </mdc>
+                <mdc>
+                    <includeMdcKeyName>totalElapsedTime</includeMdcKeyName>
                 </mdc>
                 <mdc>
                     <includeMdcKeyName>status</includeMdcKeyName>

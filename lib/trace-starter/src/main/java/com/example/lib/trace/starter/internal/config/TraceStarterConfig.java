@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 
 import com.example.lib.trace.core.ExceptionContextTracer;
+import com.example.lib.trace.core.LogTrace;
 import com.example.lib.trace.core.TraceIdGenerator;
-import com.example.lib.trace.starter.internal.aspect.AsyncExecutionAspect;
+import com.example.lib.trace.starter.internal.aspect.TraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
 import com.example.lib.trace.starter.internal.filter.RequestTraceFilter;
 import com.example.lib.trace.starter.internal.generator.UuidTraceIdGenerator;
 import com.example.lib.trace.starter.internal.handler.DefaultExceptionContextTracer;
+import com.example.lib.trace.starter.internal.log.ThreadLocalLogTrace;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -22,9 +24,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class TraceStarterConfig {
 
     @Bean
-    public FilterRegistrationBean<RequestTraceFilter> traceFilterRegistration(TraceIdGenerator traceIdGenerator) {
+    public FilterRegistrationBean<RequestTraceFilter> requestTraceFilter(LogTrace logTrace) {
         FilterRegistrationBean<RequestTraceFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestTraceFilter(traceIdGenerator));
+        registrationBean.setFilter(new RequestTraceFilter(logTrace));
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE); // first order
         return registrationBean;
@@ -37,8 +39,14 @@ public class TraceStarterConfig {
     }
 
     @Bean
-    public AsyncExecutionAspect asyncExecutionAspect() {
-        return new AsyncExecutionAspect();
+    @ConditionalOnMissingBean
+    public LogTrace logTrace(TraceIdGenerator traceIdGenerator) {
+        return new ThreadLocalLogTrace(traceIdGenerator);
+    }
+
+    @Bean
+    public TraceAspect traceAspect(LogTrace logTrace) {
+        return new TraceAspect(logTrace);
     }
 
     @Bean

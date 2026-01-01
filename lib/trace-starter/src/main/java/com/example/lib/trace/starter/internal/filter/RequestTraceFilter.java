@@ -7,8 +7,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.example.lib.common.core.context.LocalContext;
+import com.example.lib.trace.core.LogTrace;
 import com.example.lib.trace.core.TraceConstants;
-import com.example.lib.trace.core.TraceIdGenerator;
+import com.example.lib.trace.core.TraceStatus;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings("null")
 public class RequestTraceFilter extends OncePerRequestFilter {
 
-    private final TraceIdGenerator traceIdGenerator;
+    private final LogTrace logTrace;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -33,32 +34,30 @@ public class RequestTraceFilter extends OncePerRequestFilter {
             wrappedRequest = new ContentCachingRequestWrapper(request);
         }
 
-        String traceId = traceIdGenerator.generate();
         String method = request.getMethod();
         String uri = request.getRequestURI();
-        String params = request.getQueryString() == null ? "{}" : request.getQueryString();
         String clientIp = request.getRemoteAddr();
-        String userAgent = request.getHeader("User-Agent");
+        
+        // Metadata for MDC (standard fields)
+        MDC.put(TraceConstants.REQUEST_URI, uri);
+        MDC.put(TraceConstants.METHOD, method);
+        MDC.put(TraceConstants.CLIENT_IP, clientIp);
+        MDC.put(TraceConstants.USER_AGENT, request.getHeader("User-Agent"));
+        MDC.put(TraceConstants.PARAMS, request.getQueryString() == null ? "{}" : request.getQueryString());
 
-        long startTime = System.currentTimeMillis();
-
+        TraceStatus status = null;
         try {
-            MDC.put(TraceConstants.TRACE_ID, traceId);
-            MDC.put(TraceConstants.REQUEST_URI, uri);
-            MDC.put(TraceConstants.METHOD, method);
-            MDC.put(TraceConstants.PARAMS, params);
-            MDC.put(TraceConstants.CLIENT_IP, clientIp);
-            MDC.put(TraceConstants.USER_AGENT, userAgent);
+            String message = String.format("%s %s from %s", method, uri, clientIp);
+            status = logTrace.begin(message);
 
             filterChain.doFilter(wrappedRequest, response);
         } finally {
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            int status = response.getStatus();
-
-            MDC.put(TraceConstants.STATUS, String.valueOf(status));
-            MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(elapsedTime));
-            log.info("{} {} {} - {}ms from {}", status, method, uri, elapsedTime, clientIp);
-
+            if (status != null) {
+                int httpStatus = response.getStatus();
+                MDC.put(TraceConstants.STATUS, String.valueOf(httpStatus));
+                logTrace.end(status, String.format("[%d]", httpStatus));
+            }
+            
             LocalContext.clear();
             MDC.clear();
         }
