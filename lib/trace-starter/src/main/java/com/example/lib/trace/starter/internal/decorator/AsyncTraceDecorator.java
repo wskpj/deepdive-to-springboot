@@ -10,6 +10,10 @@ import com.example.lib.trace.core.TraceContext;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 비동기(Async) 스레드 실행 시 부모 스레드의 컨텍스트(MDC, LocalContext, TraceContext)를
+ * 자식 스레드로 안전하게 복사하고 정리하는 데코레이터
+ */
 @Slf4j
 public class AsyncTraceDecorator implements TaskDecorator {
 

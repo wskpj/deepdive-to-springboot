@@ -19,6 +19,10 @@ import com.example.lib.trace.starter.internal.log.ThreadLocalLogTrace;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * 트레이스 모듈(trace-starter)의 자동 구성(AutoConfiguration) 클래스
+ * HTTP 필터, 비동기 데코레이터, LogTrace, 예외 컨텍스트 추적기 등 추적과 관련된 빈을 등록합니다.
+ */
 @AutoConfiguration
 @SuppressWarnings("null")
 public class TraceStarterConfig {

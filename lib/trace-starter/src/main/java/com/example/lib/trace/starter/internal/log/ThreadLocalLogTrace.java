@@ -17,6 +17,10 @@ import com.example.lib.trace.core.TraceStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * ThreadLocal과 스택(Deque)을 이용하여 스레드 안전하게 계층형 트레이싱 상태를 관리하는 LogTrace 구현체
+ * 진입과 종료 시점마다 소요 시간 및 깊이(Depth)를 계산하여 로깅합니다.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class ThreadLocalLogTrace implements LogTrace {
@@ -31,13 +35,14 @@ public class ThreadLocalLogTrace implements LogTrace {
 
     @Override
     public TraceStatus begin(String message, TraceLevel level) {
+        // 1. 상위 스레드 등에서 Trace ID가 없는 경우 초기화
         syncContext();
         
+        // 2. 현재 트레이스의 고유 Span ID 생성 및 계층 깊이(Depth) 증가
         String traceId = MDC.get(TraceConstants.TRACE_ID);
         String parentSpanId = MDC.get(TraceConstants.SPAN_ID);
         String spanId = (parentSpanId == null) ? traceId : UUID.randomUUID().toString().substring(0, 8);
         
-        // Save current span as parent for next step
         MDC.put(TraceConstants.SPAN_ID, spanId);
         if (parentSpanId != null) {
             MDC.put(TraceConstants.PARENT_SPAN_ID, parentSpanId);
@@ -46,6 +51,7 @@ public class ThreadLocalLogTrace implements LogTrace {
         int depth = TraceContext.incrementDepth();
         MDC.put(TraceConstants.DEPTH, String.valueOf(depth));
         
+        // 3. 진입 로그 출력 및 상태(TraceStatus)를 스택에 보관
         String logMessage = String.format("[%s] %s %s", traceId, getSymbols(">", depth + 1), message);
         logWithLevel(level, logMessage);
         
@@ -65,10 +71,12 @@ public class ThreadLocalLogTrace implements LogTrace {
     }
 
     private void complete(TraceStatus status, String extraInfo) {
+        // 1. 소요 시간 및 자식 스레드(메서드) 실행 시간 계산
         long stopTimeMillis = System.currentTimeMillis();
         long totalTimeMillis = stopTimeMillis - status.getStartTimeMillis();
         long selfTimeMillis = totalTimeMillis - status.getChildExecutionTime();
         
+        // 2. 현재 스택 깊이(Depth)를 줄이고 스택에서 제거
         TraceContext.decrementDepth();
         Deque<TraceStatus> stack = stackHolder.get();
         if (!stack.isEmpty()) {
@@ -80,7 +88,7 @@ public class ThreadLocalLogTrace implements LogTrace {
             }
         }
         
-        // Populate MDC for structured logging
+        // 3. MDC에 계산된 시간 정보를 넣고 종료 로그 출력
         MDC.put(TraceConstants.DEPTH, String.valueOf(status.getDepth()));
         MDC.put(TraceConstants.TOTAL_ELAPSED_TIME, String.valueOf(totalTimeMillis));
         MDC.put(TraceConstants.ELAPSED_TIME, String.valueOf(selfTimeMillis));
@@ -98,11 +106,10 @@ public class ThreadLocalLogTrace implements LogTrace {
         
         logWithLevel(status.getLevel(), logMessage);
 
-        // Cleanup temporary MDC fields
+        // 4. 사용이 끝난 임시 MDC 데이터 정리 및 부모 컨텍스트 복원
         MDC.remove(TraceConstants.TOTAL_ELAPSED_TIME);
         MDC.remove(TraceConstants.ELAPSED_TIME);
         
-        // Restore/Update Depth in MDC for parent context
         int currentDepth = TraceContext.getDepth();
         if (currentDepth >= 0) {
             MDC.put(TraceConstants.DEPTH, String.valueOf(currentDepth));
@@ -110,7 +117,6 @@ public class ThreadLocalLogTrace implements LogTrace {
             MDC.remove(TraceConstants.DEPTH);
         }
         
-        // Restore Span Context
         if (status.getParentSpanId() != null) {
             MDC.put(TraceConstants.SPAN_ID, status.getParentSpanId());
         } else {
