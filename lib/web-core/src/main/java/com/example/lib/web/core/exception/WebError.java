@@ -8,6 +8,10 @@ import com.example.lib.common.core.exception.ErrorType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 웹 계층에서 발생하는 표준 HTTP 에러 타입
+ * HTTP 상태 코드와 메시지, 기본 로그 레벨을 함께 정의
+ */
 @Getter
 @RequiredArgsConstructor
 public enum WebError implements ErrorType {
