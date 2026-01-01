@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceIdGenerator;
-import com.example.lib.trace.starter.internal.aspect.AsyncExecutionAspect;
+import com.example.lib.trace.starter.internal.aspect.TraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
 
 class TraceStarterConfigTest {
@@ -31,7 +31,7 @@ class TraceStarterConfigTest {
     void shouldRegisterTraceFilter() {
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
-            assertThat(context).hasBean("traceFilterRegistration");
+            assertThat(context).hasBean("requestTraceFilter");
         });
     }
 
@@ -45,11 +45,11 @@ class TraceStarterConfigTest {
     }
 
     @Test
-    @DisplayName("AsyncExecutionAspect 빈이 등록되어야 한다")
-    void shouldRegisterAsyncExecutionAspect() {
+    @DisplayName("TraceAspect 빈이 등록되어야 한다")
+    void shouldRegisterTraceAspect() {
         contextRunner.run(context -> {
             assertThat(context).hasNotFailed();
-            assertThat(context).hasSingleBean(AsyncExecutionAspect.class);
+            assertThat(context).hasSingleBean(TraceAspect.class);
         });
     }
 

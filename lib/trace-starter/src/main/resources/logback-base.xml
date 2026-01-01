@@ -91,6 +91,9 @@
                     <includeMdcKeyName>exceptionMessage</includeMdcKeyName>
                 </mdc>
                 <mdc>
+                    <includeMdcKeyName>exceptionOrigin</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>stackTrace</includeMdcKeyName>
                 </mdc>
                 <mdc>

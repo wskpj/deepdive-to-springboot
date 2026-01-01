@@ -12,12 +12,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 
-import com.example.lib.common.core.context.LocalContext;
 import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.ErrorLevel;
 import com.example.lib.common.core.exception.ExceptionOrigin;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
+import com.example.lib.trace.starter.internal.log.MDCInstantLogger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -32,65 +32,81 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
     @Override
     public void handle(Exception e) {
-        log.debug("[{}] Tracing Exception Context : {}", this.getClass().getSimpleName(), e.getClass().getSimpleName());
+        log.debug("[{}:>>] Starting Tracing Exception Context", this.getClass().getSimpleName());
 
-        // Collect and store context data in LocalContext (instead of MDC)
-        LocalContext.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
-        LocalContext.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
-        collectExceptionOrigin(e);
+        // Collect everything into a LOCAL map (will be GC'd after this method)
+        Map<String, Object> context = new HashMap<>();
+        
+        context.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
+        context.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
+        
+        collectExceptionOrigin(e, context);
 
         ErrorLevel level = (e instanceof BaseException be) ? be.getLogLevel() : ErrorLevel.ERROR;
 
         if (level.isShouldCollectStackTrace()) {
-            collectStackTrace(e);
+            collectStackTrace(e, context);
         }
         if (level.isShouldCollectPayload()) {
-            collectPayload();
+            collectPayload(context);
         }
+
+        // Determine log level and message
+        String errorCode = (e instanceof BaseException be) ? be.getErrorType().getCode() : "SYSTEM_ERROR";
+        String message = String.format("[%s] %s", e.getClass().getSimpleName(), errorCode);
+
+        // Log INSTANTLY with context
+        switch (level) {
+            case INFO -> MDCInstantLogger.info(message, context);
+            case WARN -> MDCInstantLogger.warn(message, context);
+            case ERROR -> MDCInstantLogger.error(message, context);
+        }
+
+        log.debug("[{}:<<] Finished Tracing Exception Context : {}", this.getClass().getSimpleName(), e.getClass().getSimpleName());
     }
 
-    private void collectExceptionOrigin(Exception e) {
+    private void collectExceptionOrigin(Exception e, Map<String, Object> context) {
         if (e instanceof BaseException be && be.getOrigin() != null) {
             ExceptionOrigin origin = be.getOrigin();
-            LocalContext.put(TraceConstants.EXCEPTION_ORIGIN, origin.toString());
-            log.debug("[{}] Trace Origin: {}:{} {}()", this.getClass().getSimpleName(), 
-                origin.className(), origin.lineNumber(), origin.methodName());
+            context.put(TraceConstants.EXCEPTION_ORIGIN, origin.toString());
+            log.debug("[{}:--] Trace Origin: {}:{} {}()", this.getClass().getSimpleName(),
+                    origin.className(),
+                    origin.lineNumber(),
+                    origin.methodName());
         } else {
             // Standard Exception / No Origin yet: Search StackTrace
             for (StackTraceElement ste : e.getStackTrace()) {
                 String cn = ste.getClassName();
                 if (cn.startsWith("com.example") && !cn.endsWith("Exception") && !cn.contains("BaseException")) {
-                    log.debug("[{}] Trace Origin (Estimated): {}:{} {}()", this.getClass().getSimpleName(),
-                            cn, ste.getLineNumber(), ste.getMethodName());
-                    LocalContext.put(TraceConstants.EXCEPTION_ORIGIN, String.format("%s:%d %s()", cn, ste.getLineNumber(), ste.getMethodName()));
+                    String originStr = String.format("%s:%d %s()", cn, ste.getLineNumber(), ste.getMethodName());
+                    context.put(TraceConstants.EXCEPTION_ORIGIN, originStr);
+                    log.debug("[{}:--] Trace Origin (Estimated): {}:{} {}()", this.getClass().getSimpleName(),
+                            cn,
+                            ste.getLineNumber(),
+                            ste.getMethodName());
                     break;
                 }
             }
         }
     }
 
-    private void collectStackTrace(Exception e) {
+    private void collectStackTrace(Exception e, Map<String, Object> context) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-
-        LocalContext.put(TraceConstants.STACK_TRACE, sw.toString());
+        context.put(TraceConstants.STACK_TRACE, sw.toString());
     }
 
-    private void collectPayload() {
-        // Contains Request Headers
+    private void collectPayload(Map<String, Object> context) {
         String headers = extractHeaders();
-        LocalContext.put(TraceConstants.HEADERS, headers);
+        context.put(TraceConstants.HEADERS, extractHeaders());
         log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
-
-        // Contains Request Payload (Body)
         String payload = extractPayload();
-        LocalContext.put(TraceConstants.PAYLOAD, payload);
+        context.put(TraceConstants.PAYLOAD, extractPayload());
         log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
     }
 
     private String extractHeaders() {
         Enumeration<String> names = request.getHeaderNames();
-
         if (names != null) {
             Map<String, String> map = new HashMap<>();
             while (names.hasMoreElements()) {
@@ -101,7 +117,6 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
             }
             return map.toString();
         }
-
         return "{}";
     }
 

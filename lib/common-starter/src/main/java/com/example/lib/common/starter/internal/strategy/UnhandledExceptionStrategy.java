@@ -18,6 +18,5 @@ public class UnhandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override
     public void handle(Exception e) {
-        log.error("[Unhandled Exception] {}", e.getClass().getName(), e);
     }
 }

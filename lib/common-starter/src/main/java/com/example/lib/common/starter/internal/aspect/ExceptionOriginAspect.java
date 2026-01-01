@@ -11,6 +11,7 @@ import org.springframework.core.annotation.Order;
 
 import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.ExceptionOrigin;
+import com.example.lib.common.core.exception.HandledException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,22 +22,23 @@ public class ExceptionOriginAspect {
 
     @AfterThrowing(pointcut = "within(com.example..*) && !within(*..*Properties)", throwing = "ex")
     public void captureOrigin(JoinPoint joinPoint, Exception ex) {
-        log.debug("[{}] Exception Caught and Extracting Origin for Exception: {}", this.getClass().getSimpleName(), ex.getClass().getSimpleName());
-        
+        log.debug("[{}:>>] Starting to capture Exception Origin", this.getClass().getSimpleName());
+
         if (!(ex instanceof BaseException be)) return;
         if (be.getOrigin() != null) return;
 
         try {
-            for (StackTraceElement ste : be.getStackTrace()) {
-                String cn = ste.getClassName();
-                if (cn.startsWith("com.example") && !cn.endsWith("Exception") && !cn.contains("BaseException")) {
-                    be.setOrigin(new ExceptionOrigin(cn, ste.getMethodName(), ste.getLineNumber(), extractArguments(joinPoint)));
-                    log.info("[{}] Successfully Extracted Exception Origin from {}",this.getClass().getSimpleName(), be.getOrigin());
-                    return;
-                }
+            String className = joinPoint.getSignature().getDeclaringType().getSimpleName();
+            String methodName = joinPoint.getSignature().getName();
+            Map<String, Object> args = extractArguments(joinPoint);
+            
+            if (ex instanceof HandledException) {
+                be.setOrigin(new ExceptionOrigin(className, methodName, 0, args));
+                log.debug("[{}:<<] Finished to capture Exception Origin: [{}:{}] {}() with args {}", this.getClass().getSimpleName(), className, 0, methodName, args);
+                return;
             }
         } catch (Exception ignored) {
-            log.warn("[{}] Failed to Extract Exception Origin from {}",this.getClass().getSimpleName(), be.getMessage());
+            log.warn("[{}:<<] Failed to capture Exception Origin",this.getClass().getSimpleName());
         }
     }
 
