@@ -8,10 +8,12 @@ import com.example.deepdive_app.infrastructure.AppEventType;
 import com.example.deepdive_app.trace.event.TraceEvent;
 import com.example.deepdive_app.trace.service.TraceService;
 import com.example.lib.event.core.EventPublisher;
+import com.example.lib.trace.core.Trace;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Trace
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -21,23 +23,21 @@ public class TraceController {
     private final TraceService traceService;
     private final EventPublisher eventPublisher;
 
+    @Trace
     @GetMapping("/sync")
     public String sync() {
-        log.info("Controller: Received sync request");
         traceService.syncMethod();
         return "Sync OK";
     }
 
     @GetMapping("/async")
     public String async() {
-        log.info("Controller: Received async request");
         traceService.asyncMethod();
         return "Async request triggered";
     }
 
     @GetMapping("/event")
     public String triggerEvent() {
-        log.info("Controller: Publishing event");
         eventPublisher.publish(TraceEvent.of(AppEventType.TRACE_EVENT));
         return "Event published";
     }

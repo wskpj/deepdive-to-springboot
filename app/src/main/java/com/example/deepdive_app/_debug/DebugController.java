@@ -1,4 +1,4 @@
-package com.example.deepdive_app.debug;
+package com.example.deepdive_app._debug;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/debug")
 @RequiredArgsConstructor
-public class debugController {
+public class DebugController {
   
     @GetMapping("/exception/handled")
     public void triggerHandledException() {

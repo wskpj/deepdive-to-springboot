@@ -11,27 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class TraceEventListener {
 
-    /**
-     * 동기 이벤트 리스너: 발행한 스레드와 동일한 스레드에서 실행됨
-     */
     @EventListener
     @SneakyThrows
     public void handleSyncEvent(TraceEvent event) {
         log.info("Caught Sync Event: {}", event.getEventType());
         Thread.sleep(1000);
-        log.info("Handling Sync Event: {}", event.getEventType());
     }
-    
-    /**
-     * 비동기 이벤트 리스너: 별도의 비동기 스레드에서 실행됨
-     * MdcTaskDecorator에 의해 부모의 TraceID가 전파되어야 함
-    */
+
    @Async
    @EventListener
    @SneakyThrows
    public void handleAsyncEvent(TraceEvent event) {
         log.info("Caught Async Event: {}", event.getEventType());
         Thread.sleep(2000);
-        log.info("Handling Async Event: {}", event.getEventType());
     }
 }
