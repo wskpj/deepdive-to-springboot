@@ -11,6 +11,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * HTTP 서블릿 요청/응답 객체를 활용하여 쿠키를 제어하는 기본 CookieManager 구현체
+ * 보안 설정(HttpOnly, Secure, SameSite)이 적용된 쿠키를 생성합니다.
+ */
 @RequiredArgsConstructor
 @SuppressWarnings("null")
 public class StandardCookieManager implements CookieManager {

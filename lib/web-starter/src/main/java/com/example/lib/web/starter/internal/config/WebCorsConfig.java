@@ -12,6 +12,10 @@ import com.example.lib.web.starter.internal.properties.WebProperties;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 웹 모듈의 CORS(Cross-Origin Resource Sharing) 전역 설정을 담당하는 자동 구성 클래스
+ * WebProperties에 정의된 설정값을 기반으로 CorsFilter 빈을 등록
+ */
 @AutoConfiguration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(WebProperties.class)

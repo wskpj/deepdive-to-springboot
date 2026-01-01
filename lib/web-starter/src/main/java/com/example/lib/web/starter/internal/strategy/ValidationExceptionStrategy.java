@@ -10,6 +10,10 @@ import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 스프링의 유효성 검증 실패 예외(BindException, ConstraintViolationException) 발생 시
+ * 에러가 발생한 필드 목록을 추출하여 로깅하는 처리 전략
+ */
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
@@ -24,13 +28,16 @@ public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
     public void handle(Exception e) {
         String fields = "";
 
+        // 1. BindException인 경우 필드명 추출 후 중복 제거
         if (e instanceof BindException ex) {
             fields = ex.getFieldErrors().stream()
                     .map(FieldError::getField)
                     .distinct()
                     .toList()
                     .toString();
-        } else if (e instanceof ConstraintViolationException ex) {
+        } 
+        // 2. ConstraintViolationException인 경우 경로 추출 후 중복 제거
+        else if (e instanceof ConstraintViolationException ex) {
             fields = ex.getConstraintViolations().stream()
                     .map(violation -> violation.getPropertyPath().toString())
                     .distinct()
@@ -38,6 +45,7 @@ public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
                     .toString();
         }
 
+        // 3. 추출된 잘못된 필드 목록을 INFO 레벨로 로깅
         log.info("[Validation Exception] {} - Invalid Fields: {}",
                 e.getClass().getSimpleName(),
                 fields);

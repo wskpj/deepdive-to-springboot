@@ -34,6 +34,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * 웹 모듈(web-starter)의 자동 구성(AutoConfiguration) 클래스
+ * 예외 디스패처, 공통 응답 처리 핸들러, 쿠키 매니저 및 스프링 기반 예외 처리 전략/매퍼 빈을 등록
+ */
 @AutoConfiguration
 @EnableConfigurationProperties(WebProperties.class)
 public class WebStarterConfig implements WebMvcConfigurer {

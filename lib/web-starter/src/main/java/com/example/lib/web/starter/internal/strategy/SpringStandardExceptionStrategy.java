@@ -15,7 +15,8 @@ import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 스프링 MVC 의 표준 예외들을 처리하는 전략
+ * 스프링 MVC의 표준 예외들(요청 파라미터 누락, 타입 불일치, JSON 파싱 에러 등)이 발생했을 때
+ * WARN 레벨로 로깅하여 클라이언트 측의 잘못된 요청을 추적하는 전략
  */
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
