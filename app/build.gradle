@@ -14,4 +14,5 @@ dependencies {
 	implementation project(':lib:security-starter')
 	implementation project(':lib:web-swagger')
 	implementation project(':lib:web-starter')
+	implementation project(':lib:debug-starter')
 }

@@ -13,5 +13,6 @@ include 'lib:security-core'
 include 'lib:security-starter'
 include 'lib:redis-core'
 include 'lib:redis-starter'
+include 'lib:debug-starter'
 
 include 'app'

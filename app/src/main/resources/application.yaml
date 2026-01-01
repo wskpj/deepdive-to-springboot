@@ -27,5 +27,5 @@ logging:
   level:
     root: INFO
     com.example.deepdive_app: ${APP_LOG_LEVEL}
-    com.example.lib: ${LIB_LOG_LEVEL}
+    com.example.lib: ${APP_LOG_LEVEL}
     org.hibernate.SQL: INFO
