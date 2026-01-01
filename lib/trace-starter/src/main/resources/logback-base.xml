@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
-    <!-- Spring Boot Logback 설정 로드 -->
+    <!-- Load Default Spring Boot Logback -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
 
-    <!-- 텍스트 로깅 패턴 -->
+    <!-- Text Console Logging Pattern -->
     <property name="CONSOLE_TEXT_PATTERN" 
               value="%clr(%d{HH:mm:ss.SSS}){faint} [%clr(${HOSTNAME:-localhost}){green}:%clr(${PID:- }){magenta}] %clr([%15.15t]){faint} %clr(---){faint} %clr(%-35.35(%logger{30}:%L)){cyan} %clr(%5p) %clr([%X{traceId:-SYSTEM}]){faint} %m %clr(from %X{clientIp:-unknown}){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
 
-    <!-- Console Text Appender -->
+    <!-- Text Console Appender -->
     <appender name="CONSOLE_TEXT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${CONSOLE_TEXT_PATTERN}</pattern>
@@ -15,10 +15,21 @@
         </encoder>
     </appender>
 
-    <!-- Console JSON Appender -->
+    <!-- JSON Console Appender -->
+    <!-- !Required: net.logstash.logback:logstash-logback-encoder -->
     <!-- MDC에 담긴 모든 정보(timestamp, traceId 등)가 자동으로 JSON 필드에 포함됩니다. -->
-    <!-- 주의: net.logstash.logback:logstash-logback-encoder 의존성이 필요합니다. -->
     <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <!-- JSON File Appender -->
+    <!-- !Required: net.logstash.logback:logstash-logback-encoder -->
+    <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app-json.log</file>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-json.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
     </appender>
 </included>

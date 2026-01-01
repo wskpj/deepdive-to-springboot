@@ -3,10 +3,11 @@
     <!-- 라이브러리에 내장된 공통 로깅 설정 로드 -->
     <include resource="logback-base.xml"/>
 
-    <!-- local - 텍스트 콘솔 활성화 -->
+    <!-- local - 텍스트 콘솔 & JSON 파일 활성화 -->
     <springProfile name="local">
         <root level="INFO">
             <appender-ref ref="CONSOLE_TEXT" />
+            <appender-ref ref="FILE_JSON" />
         </root>
     </springProfile>
     <!-- prod/stage - JSON 콘솔만 활성화 -->
