@@ -3,9 +3,13 @@
     <!-- Load Default Spring Boot Logback -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
 
+    <!-- Properties (variable) -->
+    <property name="LOG_HOSTNAME" value="${HOSTNAME:-localhost}" />
+    <property name="LOG_PID" value="${PID:-unknown}" />
+
     <!-- Text Console Logging Pattern -->
     <property name="CONSOLE_TEXT_PATTERN" 
-              value="%clr(%d{HH:mm:ss.SSS}){faint} [%clr(${HOSTNAME:-localhost}){green}:%clr(${PID:- }){magenta}] %clr([%15.15t]){faint} %clr(---){faint} %clr(%-35.35(%logger{30}:%L)){cyan} %clr(%5p) %clr([%X{traceId:-SYSTEM}]){faint} %m %clr(from %X{clientIp:-unknown}){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+              value="%clr(%d{HH:mm:ss.SSS}){faint} [%clr(${LOG_HOSTNAME}){green}:%clr(${LOG_PID:- }){magenta}] %clr([%15.15t]){faint} %clr(---){faint} %clr(%-35.35(%logger{30}:%L)){cyan} %clr(%5p) %clr([%X{traceId:-SYSTEM}]){faint} %m %clr(from %X{clientIp:-unknown}){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
 
     <!-- Text Console Appender -->
     <appender name="CONSOLE_TEXT" class="ch.qos.logback.core.ConsoleAppender">
@@ -25,7 +29,7 @@
     <!-- JSON File Appender for local -->
     <!-- !Required: net.logstash.logback:logstash-logback-encoder -->
     <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/app-json.log</file>
+        <file>logs/app-log.json</file>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <!-- Timestamp -->
@@ -35,11 +39,21 @@
 
                 <!-- Log Main Fields -->
                 <mdc>
-                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>                
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>elapsedTime</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>status</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>method</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>uri</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>params</includeMdcKeyName>
                 </mdc>
 
@@ -50,18 +64,36 @@
                 <message/>
 
                 <!-- Host Metadata -->
-                <hostname/>
-                <pid/>
+                <globalCustomFields>
+                    <customFields>
+                        {
+                            "hostname": "${LOG_HOSTNAME}",
+                            "pid": "${LOG_PID}"
+                        }
+                    </customFields>
+                </globalCustomFields>
                 <threadName/>
 
                 <!-- Remain MDC -->
                 <mdc>
                     <includeMdcKeyName>exceptionClass</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>exceptionMessage</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>stackTrace</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>headers</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>payload</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>clientIp</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>userAgent</includeMdcKeyName>
                 </mdc>
 
@@ -70,7 +102,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/app-json.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/app-log-%d{yyyy-MM-dd}.json</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
     </appender>
