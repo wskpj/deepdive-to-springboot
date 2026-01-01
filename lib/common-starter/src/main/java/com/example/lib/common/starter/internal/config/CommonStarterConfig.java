@@ -16,6 +16,10 @@ import com.example.lib.common.starter.internal.strategy.SystemExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.UnhandledExceptionStrategy;
 import com.example.lib.trace.core.ExceptionContextTracer;
 
+/**
+ * 공통 예외 처리 모듈(common-starter)의 자동 구성(AutoConfiguration) 클래스
+ * AOP 컴포넌트, 예외 디스패처, 기본 처리 전략 등의 빈(Bean)을 컨텍스트에 등록합니다.
+ */
 @AutoConfiguration
 public class CommonStarterConfig {
 

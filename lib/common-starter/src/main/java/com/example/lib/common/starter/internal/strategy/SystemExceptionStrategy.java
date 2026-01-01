@@ -8,6 +8,9 @@ import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * SystemException(예상된 시스템 예외)에 대한 처리를 담당하는 기본 전략
+ */
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class SystemExceptionStrategy implements ExceptionHandleStrategy {
