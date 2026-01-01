@@ -9,6 +9,9 @@ import com.example.lib.event.core.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 스프링의 ApplicationEventPublisher를 사용하여 이벤트를 발행하는 기본 구현체
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class DefaultEventPublisher implements EventPublisher {
