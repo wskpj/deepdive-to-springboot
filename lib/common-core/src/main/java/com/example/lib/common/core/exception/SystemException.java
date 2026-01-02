@@ -17,8 +17,8 @@ public class SystemException extends HandledException {
         this(errorType, null, null);
     }
 
-    public SystemException(ErrorType errorType, Object details) {
-        this(errorType, details, null);
+    public SystemException(Throwable cause) {
+        this(null, null, cause);
     }
 
     public SystemException(ErrorType errorType, Throwable cause) {

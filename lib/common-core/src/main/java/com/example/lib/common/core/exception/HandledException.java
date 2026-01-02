@@ -10,16 +10,19 @@ import lombok.Getter;
 public non-sealed class HandledException extends BaseException {
 
     public HandledException() {
-        this(null);
+        this(null, null, null);
     }
 
     public HandledException(ErrorType errorType) {
-        this(errorType, null);
+        this(errorType, null, null);
     }
 
-    public HandledException(ErrorType errorType, Object details) {
-        // HandledException은 스택트레이스를 무력화하고 cause를 null로 강제합니다.
-        super(errorType == null ? new UnknownHandledError() : errorType, details, null, true, false);
+    public HandledException(Throwable cause) {
+        this(null, null, cause);
+    }
+
+    public HandledException(ErrorType errorType, Object details, Throwable cause) {
+        super(errorType == null ? new UnknownHandledError() : errorType, details, cause, true, false);
     }
 
     protected HandledException(ErrorType errorType, Object details, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
