@@ -32,7 +32,7 @@ public class ThrowsAspect {
 
             Class<? extends BaseException> targetExceptionClass = throwsAnnotation.value();
 
-            log.debug("[{}] Caught and Translating Exception: {} -> {}",
+            log.debug("[{}:>>] Caught and Translating Exception: {} -> {}",
                     this.getClass().getSimpleName(),
                     e.getClass().getSimpleName(),
                     targetExceptionClass.getSimpleName());
@@ -43,31 +43,33 @@ public class ThrowsAspect {
                 wrappedException = translateWrappedException(targetExceptionClass, e);
             } catch (Exception translationEx) {
                 // 3. 변환 실패 시 Fallback으로 원래 예외를 던짐
-                log.error("[{}] Failed to translate exception. Re-throwing original exception. Reason: {}",
+                log.debug("[{}:<<] Failed to translate exception. Re-throwing original exception. Reason: {}",
                         this.getClass().getSimpleName(),
                         translationEx.getMessage());
                 throw e; // Handled by ExceptionHandleStrategy
             }
+            
+            // 4. 변환 성공 시 변환된 예외를 던짐
+            log.debug("[{}:<<] Successfully Translated Exception: {} -> {}",
+                    this.getClass().getSimpleName(),
+                    e.getClass().getSimpleName(),
+                    wrappedException.getClass().getSimpleName());
             throw wrappedException;
         }
     }
 
     private BaseException translateWrappedException(Class<? extends BaseException> targetClass, Exception e) throws Exception {
         try {
-            // Try Throwable Cause Constructor
+            // 1. cause(Throwable) 인자를 받는 생성자로 생성 시도
+            log.debug("[{}:--] Translating Exception with Cause: {}",
+                    this.getClass().getSimpleName(),
+                    e.getMessage());
             return targetClass.getConstructor(Throwable.class).newInstance(e);
-        } catch (NoSuchMethodException ex) {
-            // Fallback to Default Constructor
-
-            // 1. 기본 생성자로 인스턴스 생성
-            BaseException baseException = targetClass.getConstructor().newInstance();
-            try {
-                // 2. initCause로 원인 예외 설정
-                baseException.initCause(e);
-            } catch (IllegalStateException ignored) {
-                // 3. 이미 initCause가 호출되었거나, 지원하지 않는 경우 무시
-            }
-            return baseException;
+        } catch (Exception ex) {
+            // 2. 변환 실패 시 원래 예외를 반환
+            log.debug("[{}:--] Translating Failed",
+                    this.getClass().getSimpleName());
+            throw ex;
         }
     }
 }
