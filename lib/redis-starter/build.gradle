@@ -1,9 +1,10 @@
 dependencies {
     api project(':lib:common-core')
     api project(':lib:redis-core')
-    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 test {
