@@ -1,6 +1,5 @@
 package com.example.lib.web.starter.internal.strategy;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
@@ -13,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * 인증/인가 예외나 요청 한도 초과 등은 WARN 레벨로, 그 외 일반 오류는 INFO 레벨로 로깅함
  */
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 50)
+@Order(10000)
 public class WebExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

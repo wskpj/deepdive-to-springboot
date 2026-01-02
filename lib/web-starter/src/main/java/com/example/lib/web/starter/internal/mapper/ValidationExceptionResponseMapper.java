@@ -1,6 +1,5 @@
 package com.example.lib.web.starter.internal.mapper;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * ApiError에 각 필드별 에러 상세 내역(details)을 포함시키는 매퍼
  */
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 10)
+@Order(10)
 public class ValidationExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override

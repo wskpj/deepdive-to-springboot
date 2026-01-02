@@ -2,7 +2,6 @@ package com.example.lib.web.starter.internal.strategy;
 
 import java.util.List;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * WARN 레벨로 로깅하여 클라이언트 측의 잘못된 요청을 추적하는 전략
  */
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 10)
+@Order(10)
 public class SpringStandardExceptionStrategy implements ExceptionHandleStrategy {
 
     public static final List<Class<? extends Exception>> TARGET_EXCEPTIONS = List.of(

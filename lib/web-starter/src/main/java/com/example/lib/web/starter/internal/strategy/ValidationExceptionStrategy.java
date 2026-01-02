@@ -1,6 +1,5 @@
 package com.example.lib.web.starter.internal.strategy;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -15,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * 에러가 발생한 필드 목록을 추출하여 로깅하는 처리 전략
  */
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE - 10)
+@Order(10)
 public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

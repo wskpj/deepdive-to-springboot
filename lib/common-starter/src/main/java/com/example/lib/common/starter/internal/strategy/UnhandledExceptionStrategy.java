@@ -1,6 +1,5 @@
 package com.example.lib.common.starter.internal.strategy;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
@@ -12,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * 모든 예외를 지원(supports = true)하므로 우선순위가 가장 낮음
  */
 @Slf4j
-@Order(Ordered.LOWEST_PRECEDENCE)
+@Order(10)
 public class UnhandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

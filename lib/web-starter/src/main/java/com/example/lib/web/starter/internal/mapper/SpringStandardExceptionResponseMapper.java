@@ -1,6 +1,5 @@
 package com.example.lib.web.starter.internal.mapper;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import com.example.lib.web.core.dto.ApiError;
@@ -12,7 +11,7 @@ import com.example.lib.web.starter.internal.strategy.SpringStandardExceptionStra
  * 스프링 MVC의 표준 예외들(파라미터 누락, 타입 불일치 등)을 
  * 클라이언트 오류인 BAD_REQUEST(400) 응답 객체로 변환하는 매퍼
  */
-@Order(Ordered.LOWEST_PRECEDENCE - 10)
+@Order(10)
 public class SpringStandardExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override
