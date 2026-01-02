@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Aspect
 @Order(1)
-public class GlobalExceptionWrapperAspect {
+public class GlobalExceptionWrappingAspect {
 
     @Around("within(com.example..*) " +
             "&& !within(com.example..config..*) " +
@@ -25,12 +25,19 @@ public class GlobalExceptionWrapperAspect {
     public Object wrap(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             return joinPoint.proceed();
-        } catch (BaseException e) {
-            // BaseException 타입인 경우 그대로 throw
-            throw e;
         } catch (Exception e) {
+            log.debug("[{}:>>] Exception Occured and Trying to Wrap.. ",
+                    this.getClass().getSimpleName());
+
+            if (e instanceof BaseException be) {
+                // BaseException 타입인 경우 그대로 throw
+                log.debug("[{}:<<] Detected BaseException, Passing..",
+                        this.getClass().getSimpleName());
+                throw e;
+            }
+
             // BaseException이 아닌 모든 자바 표준 예외를 낚아채 UnhandledException으로 래핑
-            log.debug("[{}] Wrapping into UnhandledException: {}",
+            log.debug("[{}:<<] Detected UnhandledException, Wrapping into UnhandledException: {}",
                     this.getClass().getSimpleName(),
                     e.getMessage());
             throw new UnhandledException(e);
