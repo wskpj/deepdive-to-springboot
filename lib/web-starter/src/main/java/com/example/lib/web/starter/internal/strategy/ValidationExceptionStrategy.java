@@ -45,8 +45,8 @@ public class ValidationExceptionStrategy implements ExceptionHandleStrategy {
                     .toString();
         }
 
-        // 3. 추출된 잘못된 필드 목록을 INFO 레벨로 로깅
-        log.info("[Validation Exception] {} - Invalid Fields: {}",
+        // 3. 추출된 잘못된 필드 목록을 DEBUG 레벨로 로깅
+        log.debug("[Validation Exception] {} - Invalid Fields: {}",
                 e.getClass().getSimpleName(),
                 fields);
     }

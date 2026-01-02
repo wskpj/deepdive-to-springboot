@@ -10,6 +10,7 @@ import com.example.lib.common.core.exception.SystemException;
 
 import lombok.RequiredArgsConstructor;
 
+@SuppressWarnings("null")
 @RestController
 @RequestMapping("/api/debug")
 @RequiredArgsConstructor
@@ -38,12 +39,22 @@ public class DebugController {
     @Throws(HandledException.class)
     @GetMapping("/throws/handled")
     public void triggerThrowsHandledException() {
-        throw new RuntimeException();
+        try {
+            String nullStr = null;
+            nullStr.length();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Throws(SystemException.class)
     @GetMapping("/throws/system")
     public void triggerThrowsSystemException() {
-        throw new RuntimeException();
+        try {
+            String nullStr = null;
+            nullStr.length();
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

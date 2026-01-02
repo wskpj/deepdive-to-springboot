@@ -14,7 +14,7 @@ public class TraceEventListener {
     @EventListener
     @SneakyThrows
     public void handleSyncEvent(TraceEvent event) {
-        log.info("Caught Sync Event: {}", event.getEventType());
+        log.debug("Caught Sync Event: {}", event.getEventType());
         Thread.sleep(1000);
     }
 
@@ -22,7 +22,7 @@ public class TraceEventListener {
    @EventListener
    @SneakyThrows
    public void handleAsyncEvent(TraceEvent event) {
-        log.info("Caught Async Event: {}", event.getEventType());
+        log.debug("Caught Async Event: {}", event.getEventType());
         Thread.sleep(2000);
     }
 }
