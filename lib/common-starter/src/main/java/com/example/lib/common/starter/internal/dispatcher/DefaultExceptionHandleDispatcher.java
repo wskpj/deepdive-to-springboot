@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
-import com.example.lib.trace.core.ExceptionContextTracer;
+import com.example.lib.trace.core.handler.ExceptionContextTracer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,15 @@ public class DefaultExceptionHandleDispatcher implements ExceptionHandleDispatch
 
         // 2. 지원하는 처리 전략을 찾아 위임
         strategies.stream()
-                .filter(strategy -> strategy.supports(e))
+                .filter(strategy -> {
+                    boolean supported = strategy.supports(e);
+                    if (supported) {
+                        log.debug("[{}] Selected Strategy: {}",
+                                this.getClass().getSimpleName(),
+                                strategy.getClass().getSimpleName());
+                    }
+                    return supported;
+                })
                 .findFirst()
                 .ifPresent(strategy -> strategy.handle(e));
     }

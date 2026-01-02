@@ -11,7 +11,7 @@ import com.example.lib.web.core.mapper.ExceptionResponseMapper;
  * 웹 계층에서 명시적으로 발생시킨 WebException을 
  * 예외가 품고 있는 WebError 상태에 맞춰 해당 ApiError로 변환하는 매퍼
  */
-@Order(10000)
+@Order(1)
 public class WebExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override

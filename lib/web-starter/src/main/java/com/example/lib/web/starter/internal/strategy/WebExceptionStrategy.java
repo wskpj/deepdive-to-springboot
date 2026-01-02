@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
  * 인증/인가 예외나 요청 한도 초과 등은 WARN 레벨로, 그 외 일반 오류는 INFO 레벨로 로깅함
  */
 @Slf4j
-@Order(10000)
+@Order(1)
 public class WebExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

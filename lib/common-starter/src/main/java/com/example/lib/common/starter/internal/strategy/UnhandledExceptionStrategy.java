@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * 모든 예외를 지원(supports = true)하므로 우선순위가 가장 낮음
  */
 @Slf4j
-@Order(10)
+@Order(1_000_000)
 public class UnhandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

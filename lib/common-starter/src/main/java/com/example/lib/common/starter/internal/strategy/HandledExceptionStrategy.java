@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * HandledException(예상된 비즈니스 예외)에 대한 처리를 담당하는 기본 전략
  */
 @Slf4j
-@Order(10)
+@Order(100)
 public class HandledExceptionStrategy implements ExceptionHandleStrategy {
 
     @Override

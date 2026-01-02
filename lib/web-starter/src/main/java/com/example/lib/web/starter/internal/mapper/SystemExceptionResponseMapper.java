@@ -11,7 +11,7 @@ import com.example.lib.web.core.mapper.ExceptionResponseMapper;
  * 처리되지 않은 시스템 내부 예외(SystemException)를 
  * 서버 오류인 INTERNAL_SERVER_ERROR(500) 응답 객체로 변환하는 매퍼
  */
-@Order(100)
+@Order(10_000)
 public class SystemExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override
