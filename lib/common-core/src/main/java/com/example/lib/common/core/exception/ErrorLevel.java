@@ -14,6 +14,6 @@ public enum ErrorLevel {
     WARN(false, false),
     ERROR(true, true);
 
-    private final boolean shouldCollectStackTrace;
-    private final boolean shouldCollectPayload;
+    private final boolean includeStackTrace;
+    private final boolean includePayload;
 }

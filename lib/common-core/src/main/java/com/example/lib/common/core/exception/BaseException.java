@@ -1,64 +1,48 @@
 package com.example.lib.common.core.exception;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 모든 커스텀 예외의 상위 클래스
- * 컴파일 시점에서 HandledException과 SystemException만 상속받도록 제한함
+ * 인스턴스를 생성할 수 없고, HandledException과 UnhandledException만 상속하도록 제한함
  */
 @Getter
-public sealed class BaseException extends RuntimeException permits HandledException, SystemException {
+public sealed class BaseException extends RuntimeException permits HandledException, UnhandledException {
 
     protected final ErrorType errorType;
     protected final Object details;
 
-    @Setter
-    private ExceptionOrigin origin;
-
-    protected BaseException() {
-        this(new UnknownException(), null, null);
-    }
-
-    protected BaseException(Throwable cause) {
-        this(new UnknownException(), null, cause);
-    }
-
-    protected BaseException(ErrorType errorType) {
-        this(errorType, null, null);
-    }
-
-    protected BaseException(ErrorType errorType, Object details) {
-        this(errorType, details, null);
-    }
-
-    protected BaseException(ErrorType errorType, Throwable cause) {
-        this(errorType, null, cause);
-    }
-
     protected BaseException(ErrorType errorType, Object details, Throwable cause) {
-        super(errorType == null ? "Unknown Error" : errorType.getMessage(), cause);
-        this.errorType = errorType == null ? new UnknownException() : errorType;
+        this(errorType, details, cause, true, true);
+    }
+
+    protected BaseException(ErrorType errorType, Object details, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(errorType == null ? UnknownError.UNKNOWN_ERROR_MESSAGE : errorType.getMessage(), cause, enableSuppression, writableStackTrace);
+        this.errorType = errorType == null ? new UnknownError() : errorType;
         this.details = details;
     }
 
     public ErrorLevel getLogLevel() {
-        return errorType.getLogLevel();
+        return errorType.getLevel();
     }
 
-    private static class UnknownException implements ErrorType {
+    private static class UnknownError implements ErrorType {
+
+        private static final String UNKNOWN_ERROR_CODE = "UNKNOWN_ERROR";
+        private static final String UNKNOWN_ERROR_MESSAGE = "Unknown Error";
+
         @Override
         public String getCode() {
-            return "UNKNOWN_ERROR";
+            return UNKNOWN_ERROR_CODE;
         }
 
         @Override
         public String getMessage() {
-            return "Unknown Error";
+            return UNKNOWN_ERROR_MESSAGE;
         }
 
         @Override
-        public ErrorLevel getLogLevel() {
+        public ErrorLevel getLevel() {
             return ErrorLevel.ERROR;
         }
     }

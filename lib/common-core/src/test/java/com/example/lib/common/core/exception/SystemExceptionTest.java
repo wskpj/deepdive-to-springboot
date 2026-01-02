@@ -38,7 +38,7 @@ class SystemExceptionTest {
         ErrorType errorType = new ErrorType() {
             @Override public String getCode() { return "CRITICAL_500"; }
             @Override public String getMessage() { return "Critical System Failure"; }
-            @Override public ErrorLevel getLogLevel() { return ErrorLevel.ERROR; }
+            @Override public ErrorLevel getLevel() { return ErrorLevel.ERROR; }
         };
         String details = "DB Connection Timeout";
         RuntimeException cause = new RuntimeException("DB down");

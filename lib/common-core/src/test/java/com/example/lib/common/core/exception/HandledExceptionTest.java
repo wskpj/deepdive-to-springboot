@@ -38,7 +38,7 @@ class HandledExceptionTest {
         ErrorType errorType = new ErrorType() {
             @Override public String getCode() { return "H400"; }
             @Override public String getMessage() { return "Bad Request"; }
-            @Override public ErrorLevel getLogLevel() { return ErrorLevel.INFO; }
+            @Override public ErrorLevel getLevel() { return ErrorLevel.INFO; }
         };
         String details = "detail info";
         RuntimeException cause = new RuntimeException("root");

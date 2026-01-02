@@ -9,7 +9,7 @@ public interface ErrorType {
 
     String getMessage();
 
-    default ErrorLevel getLogLevel() {
+    default ErrorLevel getLevel() {
         return ErrorLevel.ERROR;
     }
 }

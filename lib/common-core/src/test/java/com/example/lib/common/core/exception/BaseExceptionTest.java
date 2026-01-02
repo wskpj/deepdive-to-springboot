@@ -13,7 +13,7 @@ class BaseExceptionTest {
         ErrorType customError = new ErrorType() {
             @Override public String getCode() { return "BASE_001"; }
             @Override public String getMessage() { return "Base Message"; }
-            @Override public ErrorLevel getLogLevel() { return ErrorLevel.ERROR; }
+            @Override public ErrorLevel getLevel() { return ErrorLevel.ERROR; }
         };
 
         // HandledException을 통해 BaseException의 로직 검증
