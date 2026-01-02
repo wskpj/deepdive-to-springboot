@@ -3,6 +3,7 @@ package com.example.lib.common.starter.internal.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.annotation.Order;
 
 import com.example.lib.common.core.annotation.Throws;
 import com.example.lib.common.core.exception.BaseException;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Aspect
+@Order(2)
 public class ThrowsAspect {
 
     /**
@@ -41,7 +43,9 @@ public class ThrowsAspect {
                 wrappedException = translateWrappedException(targetExceptionClass, e);
             } catch (Exception translationEx) {
                 // 3. 변환 실패 시 Fallback으로 원래 예외를 던짐
-                log.warn("[Throws Aspect] Failed to translate exception. Re-throwing original exception. Reason: {}", translationEx.getMessage());
+                log.error("[{}] Failed to translate exception. Re-throwing original exception. Reason: {}",
+                        this.getClass().getSimpleName(),
+                        translationEx.getMessage());
                 throw e; // Handled by ExceptionHandleStrategy
             }
             throw wrappedException;
@@ -54,7 +58,16 @@ public class ThrowsAspect {
             return targetClass.getConstructor(Throwable.class).newInstance(e);
         } catch (NoSuchMethodException ex) {
             // Fallback to Default Constructor
-            return targetClass.getConstructor().newInstance();
+
+            // 1. 기본 생성자로 인스턴스 생성
+            BaseException baseException = targetClass.getConstructor().newInstance();
+            try {
+                // 2. initCause로 원인 예외 설정
+                baseException.initCause(e);
+            } catch (IllegalStateException ignored) {
+                // 3. 이미 initCause가 호출되었거나, 지원하지 않는 경우 무시
+            }
+            return baseException;
         }
     }
 }

@@ -85,13 +85,10 @@
 
                 <!-- Remain MDC -->
                 <mdc>
+                    <includeMdcKeyName>errorCode</includeMdcKeyName>
+                </mdc>
+                <mdc>
                     <includeMdcKeyName>exceptionClass</includeMdcKeyName>
-                </mdc>
-                <mdc>
-                    <includeMdcKeyName>exceptionMessage</includeMdcKeyName>
-                </mdc>
-                <mdc>
-                    <includeMdcKeyName>exceptionOrigin</includeMdcKeyName>
                 </mdc>
                 <mdc>
                     <includeMdcKeyName>stackTrace</includeMdcKeyName>

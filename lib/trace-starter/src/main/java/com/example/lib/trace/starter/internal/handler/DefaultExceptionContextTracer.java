@@ -14,7 +14,6 @@ import org.springframework.web.util.WebUtils;
 
 import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.ErrorLevel;
-import com.example.lib.common.core.exception.ExceptionOrigin;
 import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
 import com.example.lib.trace.starter.internal.log.MDCInstantLogger;
@@ -40,60 +39,31 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
         // 1. 추적에 사용할 임시 로컬 컨텍스트 생성 (메서드 종료 후 GC됨)
         Map<String, Object> context = new HashMap<>();
-        
-        context.put(TraceConstants.EXCEPTION_CLASS, e.getClass().getSimpleName());
-        context.put(TraceConstants.EXCEPTION_MESSAGE, e.getMessage());
-        
-        // 2. 클래스, 메시지 및 발생 지점(Origin) 정보 수집
-        collectExceptionOrigin(e, context);
 
+        String exceptionClass = e.getClass().getSimpleName();
+        context.put(TraceConstants.EXCEPTION_CLASS, exceptionClass);
+
+        // 2. 예외 레벨에 따라 스택 트레이스 및 Payload 선택적 수집
         ErrorLevel level = (e instanceof BaseException be) ? be.getLogLevel() : ErrorLevel.ERROR;
-
-        // 3. 예외 레벨에 따라 스택 트레이스 및 Payload 선택적 수집
-        if (level.isShouldCollectStackTrace()) {
+        if (level.isIncludeStackTrace()) {
             collectStackTrace(e, context);
         }
-        if (level.isShouldCollectPayload()) {
+        if (level.isIncludePayload()) {
             collectPayload(context);
         }
 
-        String errorCode = (e instanceof BaseException be) ? be.getErrorType().getCode() : "SYSTEM_ERROR";
-        String message = String.format("[%s] %s", e.getClass().getSimpleName(), errorCode);
+        String errorCode = (e instanceof BaseException be) ? be.getErrorType().getCode() : "NONE";
+        context.put(TraceConstants.ERROR_CODE, errorCode);
 
         // 4. 예외 로그 레벨에 맞춰 MDC 즉시 로깅 실행
+        String message = String.format("[%s] %s", exceptionClass, errorCode);
         switch (level) {
             case INFO -> MDCInstantLogger.info(message, context);
             case WARN -> MDCInstantLogger.warn(message, context);
             case ERROR -> MDCInstantLogger.error(message, context);
         }
 
-        log.debug("[{}:<<] Finished Tracing Exception Context : {}", this.getClass().getSimpleName(), e.getClass().getSimpleName());
-    }
-
-    private void collectExceptionOrigin(Exception e, Map<String, Object> context) {
-        // 1. 예외가 Origin을 이미 가지고 있다면 해당 정보 사용
-        if (e instanceof BaseException be && be.getOrigin() != null) {
-            ExceptionOrigin origin = be.getOrigin();
-            context.put(TraceConstants.EXCEPTION_ORIGIN, origin.toString());
-            log.debug("[{}:--] Trace Origin: {}:{} {}()", this.getClass().getSimpleName(),
-                    origin.className(),
-                    origin.lineNumber(),
-                    origin.methodName());
-        } else {
-            // 2. Origin이 없다면 스택 트레이스를 뒤져서 'com.example' 패키지 내의 최초 발생 지점 추정
-            for (StackTraceElement ste : e.getStackTrace()) {
-                String cn = ste.getClassName();
-                if (cn.startsWith("com.example") && !cn.endsWith("Exception") && !cn.contains("BaseException")) {
-                    String originStr = String.format("%s:%d %s()", cn, ste.getLineNumber(), ste.getMethodName());
-                    context.put(TraceConstants.EXCEPTION_ORIGIN, originStr);
-                    log.debug("[{}:--] Trace Origin (Estimated): {}:{} {}()", this.getClass().getSimpleName(),
-                            cn,
-                            ste.getLineNumber(),
-                            ste.getMethodName());
-                    break;
-                }
-            }
-        }
+        log.debug("[{}:<<] Finished Tracing Exception Context : {}", this.getClass().getSimpleName(), exceptionClass);
     }
 
     private void collectStackTrace(Exception e, Map<String, Object> context) {
@@ -105,10 +75,10 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     private void collectPayload(Map<String, Object> context) {
         String headers = extractHeaders();
         context.put(TraceConstants.HEADERS, extractHeaders());
-        log.debug("[{}] Headers: {}", this.getClass().getSimpleName(), headers);
+        log.debug("[{}:--] Headers: {}", this.getClass().getSimpleName(), headers);
         String payload = extractPayload();
         context.put(TraceConstants.PAYLOAD, extractPayload());
-        log.debug("[{}] Payload: {}", this.getClass().getSimpleName(), payload);
+        log.debug("[{}:--] Payload: {}", this.getClass().getSimpleName(), payload);
     }
 
     private String extractHeaders() {

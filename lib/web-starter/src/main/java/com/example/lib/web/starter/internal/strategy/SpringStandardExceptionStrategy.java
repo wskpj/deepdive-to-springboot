@@ -37,6 +37,5 @@ public class SpringStandardExceptionStrategy implements ExceptionHandleStrategy 
 
     @Override
     public void handle(Exception e) {
-        log.warn("[Handled Spring Exception] {}", e.getClass().getSimpleName());
     }
 }

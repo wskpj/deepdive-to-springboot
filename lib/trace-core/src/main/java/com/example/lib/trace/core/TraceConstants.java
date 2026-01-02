@@ -21,9 +21,8 @@ public final class TraceConstants {
     public static final String USER_AGENT = "userAgent";
 
     // Debug
+    public static final String ERROR_CODE = "errorCode";
     public static final String EXCEPTION_CLASS = "exceptionClass";
-    public static final String EXCEPTION_MESSAGE = "exceptionMessage";
-    public static final String EXCEPTION_ORIGIN = "exceptionOrigin";
     public static final String STACK_TRACE = "stackTrace";
 
     public static final String HEADERS = "headers";
