@@ -1,6 +1,7 @@
 #!/bin/bash
 
 EXTRACT_PATH="app/build/extracted"
+APP_NAME="deepdive-app"
 
 # Color constants
 CYAN='\033[0;36m'
@@ -28,4 +29,4 @@ echo -e "${CYAN}--- [3/4] Docker Compose Build & Up.. ---${PLAIN}"
 docker-compose up -d --build
 
 echo -e "${GREEN}--- [4/4] Application is Starting.. ---${PLAIN}"
-docker logs -f "deepdive-app"
+docker logs -f "${APP_NAME}"

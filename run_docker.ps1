@@ -1,4 +1,5 @@
 $EXTRACT_PATH = "app/build/extracted"
+$APP_NAME = "deepdive-app"
 
 Write-Host "--- [1/4] Building JAR locally.. ---" -ForegroundColor Cyan
 ./gradlew bootJar -x test --parallel
@@ -19,4 +20,4 @@ Write-Host "--- [3/4] Docker Compose Build & Up.. ---" -ForegroundColor Cyan
 docker-compose up -d --build
 
 Write-Host "--- [4/4] Application is Starting.. ---" -ForegroundColor Green
-docker logs -f "deepdive-app"
+docker logs -f "$APP_NAME"
