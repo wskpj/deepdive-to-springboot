@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
-import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.web.core.dispatcher.ExceptionResponseDispatcher;
 import com.example.lib.web.core.mapper.ExceptionResponseMapper;
 import com.example.lib.web.core.service.CookieManager;
