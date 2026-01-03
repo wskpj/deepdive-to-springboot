@@ -56,5 +56,8 @@ public interface StandardAuthApi {
      */
     @Operation(summary = "내 정보 조회", description = "Bearer Access Token 검증에 통과한 사용자의 ID 및 역할 정보를 반환합니다.")
     @GetMapping("/me")
-    UserProfileResponse me(@RequestHeader(value = "Authorization", required = false) String authHeader);
+    UserProfileResponse me(
+            @Parameter(hidden = true)
+            @RequestHeader(value = "Authorization", required = false)
+            String authHeader);
 }

@@ -127,13 +127,13 @@ public class StandardAuthController implements StandardAuthApi {
         // 3. 유효 토큰 내에 박힌 주체(Subject)의 Long ID 로드
         Long userId = jwtProvider.getUserId(token);
 
-        // 4. Access Token 만료 시각 추출
-        long accessTokenExpiresAt = jwtProvider.getExpiration(token);
+        // 4. Access Token 잔여 유효 시간 (현재 시점 기준, ms)
+        long accessTokenExpiresIn = jwtProvider.getExpiresIn(token);
 
-        // 5. Refresh Token 만료 시각 추출 (쿠키 존재 시, 없으면 null)
-        Long refreshTokenExpiresAt = jwtCookieManager.getRefreshTokenCookie()
+        // 5. Refresh Token 잔여 유효 시간 (쿠키 존재 시, 없으면 null)
+        Long refreshTokenExpiresIn = jwtCookieManager.getRefreshTokenCookie()
                 .filter(jwtProvider::validateToken)
-                .map(jwtProvider::getExpiration)
+                .map(jwtProvider::getExpiresIn)
                 .orElse(null);
 
         // 6. 해당 회원 식별값으로 상세 유저 명세를 조회하여 반환
@@ -141,8 +141,8 @@ public class StandardAuthController implements StandardAuthApi {
         return new UserProfileResponse(
                 user.getId(),
                 user.getRole(),
-                accessTokenExpiresAt,
-                refreshTokenExpiresAt
+                accessTokenExpiresIn,
+                refreshTokenExpiresIn
         );
     }
 }

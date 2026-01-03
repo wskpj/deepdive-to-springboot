@@ -105,8 +105,13 @@ public class DefaultJwtProvider<ID> implements JwtProvider<ID> {
     }
 
     @Override
-    public long getExpiration(String token) {
+    public long getExpiresAt(String token) {
         return getClaims(token).getExpiration().getTime();
+    }
+
+    @Override
+    public long getExpiresIn(String token) {
+        return getExpiresAt(token) - System.currentTimeMillis();
     }
 
     @Override
