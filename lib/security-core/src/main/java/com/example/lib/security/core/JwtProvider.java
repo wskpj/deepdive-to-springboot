@@ -81,6 +81,14 @@ public interface JwtProvider<ID> {
     <T> T getClaim(String token, String claimName, Class<T> type);
 
     /**
+     * 토큰의 만료 시각을 Unix epoch 밀리초로 추출합니다.
+     *
+     * @param token JWT 토큰
+     * @return 토큰 만료 시각 (epoch milliseconds)
+     */
+    long getExpiration(String token);
+
+    /**
      * 토큰의 서명, 포맷, 만료 여부 등 모든 유효성을 검증합니다.
      *
      * @param token JWT 토큰

@@ -105,6 +105,11 @@ public class DefaultJwtProvider<ID> implements JwtProvider<ID> {
     }
 
     @Override
+    public long getExpiration(String token) {
+        return getClaims(token).getExpiration().getTime();
+    }
+
+    @Override
     public boolean validateToken(String token) {
         return validateTokenDetail(token).isValid();
     }

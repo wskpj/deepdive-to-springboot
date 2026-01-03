@@ -1,6 +1,6 @@
 package com.example.lib.security.starter.internal.config;
 
-import java.net.CookieManager;
+import com.example.lib.web.core.service.CookieManager;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
