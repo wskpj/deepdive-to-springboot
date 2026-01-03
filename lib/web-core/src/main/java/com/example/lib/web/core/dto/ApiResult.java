@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * API 응답의 표준 포맷 규격
  * 모든 웹 응답은 이 레코드 형태로 래핑되어 클라이언트에게 반환됨
  */
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiResult<T>(
     boolean success,
     T data,
