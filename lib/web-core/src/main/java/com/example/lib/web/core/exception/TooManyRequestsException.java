@@ -5,4 +5,8 @@ public class TooManyRequestsException extends WebException {
     public TooManyRequestsException() {
         super(WebError.TOO_MANY_REQUESTS);
     }
+
+    public TooManyRequestsException(String message) {
+        super(WebError.TOO_MANY_REQUESTS, message);
+    }
 }

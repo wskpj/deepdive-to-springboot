@@ -5,4 +5,8 @@ public class NotFoundException extends WebException {
     public NotFoundException() {
         super(WebError.NOT_FOUND);
     }
+
+    public NotFoundException(String message) {
+        super(WebError.NOT_FOUND, message);
+    }
 }

@@ -5,4 +5,8 @@ public class UnprocessableEntityException extends WebException {
     public UnprocessableEntityException() {
         super(WebError.UNPROCESSABLE_ENTITY);
     }
+
+    public UnprocessableEntityException(String message) {
+        super(WebError.UNPROCESSABLE_ENTITY, message);
+    }
 }
