@@ -7,9 +7,9 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 
-import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.LogTrace;
 import com.example.lib.trace.core.TraceIdGenerator;
+import com.example.lib.trace.core.handler.ExceptionContextTracer;
 import com.example.lib.trace.starter.internal.aspect.TraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
 import com.example.lib.trace.starter.internal.filter.RequestTraceFilter;

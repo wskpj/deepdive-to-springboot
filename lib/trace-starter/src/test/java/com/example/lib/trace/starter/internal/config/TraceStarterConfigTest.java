@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
-import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceIdGenerator;
+import com.example.lib.trace.core.handler.ExceptionContextTracer;
 import com.example.lib.trace.starter.internal.aspect.TraceAspect;
 import com.example.lib.trace.starter.internal.decorator.AsyncTraceDecorator;
 

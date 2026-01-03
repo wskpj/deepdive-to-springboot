@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
-import com.example.lib.trace.core.ExceptionContextTracer;
+import com.example.lib.trace.core.handler.ExceptionContextTracer;
 
 class CommonStarterConfigTest {
 

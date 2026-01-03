@@ -14,8 +14,8 @@ import org.springframework.web.util.WebUtils;
 
 import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.ErrorLevel;
-import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
+import com.example.lib.trace.core.handler.ExceptionContextTracer;
 import com.example.lib.trace.starter.internal.log.MDCInstantLogger;
 
 import jakarta.servlet.http.HttpServletRequest;
