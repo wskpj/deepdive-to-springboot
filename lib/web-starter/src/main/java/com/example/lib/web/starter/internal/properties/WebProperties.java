@@ -12,7 +12,7 @@ public record WebProperties(
     @DefaultValue("*")
     List<String> allowedOrigins,
     
-    @DefaultValue("GET,POST,PUT,PATCH,DELETE,OPTIONS")
+    @DefaultValue({"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"})
     List<String> allowedMethods,
     
     @DefaultValue("*")
