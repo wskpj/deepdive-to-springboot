@@ -1,7 +1,5 @@
 package com.example.lib.security.starter.internal.config;
 
-import com.example.lib.web.core.service.CookieManager;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,11 +10,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.lib.security.core.JwtProvider;
 import com.example.lib.security.starter.internal.cookie.JwtCookieManager;
+import com.example.lib.security.starter.internal.filter.JwtAuthenticationFilter;
+import com.example.lib.security.starter.internal.mapper.SecurityExceptionResponseMapper;
 import com.example.lib.security.starter.internal.properties.SecurityProperties;
 import com.example.lib.security.starter.internal.provider.DefaultJwtProvider;
+import com.example.lib.web.core.service.CookieManager;
 
 /**
  * 보안 모듈(security-starter)의 자동 구성(AutoConfiguration) 클래스
@@ -28,14 +30,25 @@ import com.example.lib.security.starter.internal.provider.DefaultJwtProvider;
 public class SecurityStarterConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http, 
+            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+        
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             );
         
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        
         return http.build();
+    }
+    
+    @Bean
+    @ConditionalOnMissingBean(JwtAuthenticationFilter.class)
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider<Long> jwtProvider) {
+        return new JwtAuthenticationFilter(jwtProvider);
     }
     
     @Bean
@@ -55,5 +68,10 @@ public class SecurityStarterConfig {
             CookieManager cookieManager,
             SecurityProperties securityProperties) {
         return new JwtCookieManager(cookieManager, securityProperties);
+    }
+
+    @Bean
+    public SecurityExceptionResponseMapper securityExceptionResponseMapper() {
+        return new SecurityExceptionResponseMapper();
     }
 }

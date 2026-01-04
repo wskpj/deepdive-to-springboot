@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.example.lib.security.starter.internal.properties.SecurityProperties;
 import com.example.lib.web.core.service.CookieManager;
+import com.example.lib.web.core.service.CookieOptions;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +29,15 @@ public class JwtCookieManager {
             return;
         }
         int maxAgeInSeconds = (int) (securityProperties.jwtRefreshExpirationTime() / 1000);
-        cookieManager.addCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, maxAgeInSeconds);
+        
+        CookieOptions options = CookieOptions.builder()
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict") // Refresh Token은 링크 공유 진입 시 전송될 필요가 없으므로 가장 강력한 Strict 권장!
+                .build();
+
+        cookieManager.addCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, maxAgeInSeconds, options);
     }
 
     /**

@@ -1,0 +1,5 @@
+dependencies {
+    api project(':lib:security-core')
+    api project(':lib:web-core')
+    api 'org.springframework.boot:spring-boot-starter-security'
+}
