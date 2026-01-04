@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.lib.common.core.dispatcher.ExceptionHandleDispatcher;
 import com.example.lib.common.core.strategy.ExceptionHandleStrategy;
-import com.example.lib.trace.core.handler.ExceptionContextTracer;
+import com.example.lib.trace.core.ExceptionContextTracer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +27,28 @@ public class DefaultExceptionHandleDispatcher implements ExceptionHandleDispatch
         // 1. 예외 컨텍스트 추적
         tracer.handle(e);
 
-        // 2. 지원하는 처리 전략을 찾아 위임
+        // 2. 등록된 전략들을 순회하며 해당 예외를 지원하는(supports) 전략 검색
+        // 3. 찾은 전략을 통해 예외 로깅 및 사이드 이펙트 처리 수행
+        log.debug("[{}:>>] Start to Handle Exception [{}]",
+                this.getClass().getSimpleName(),
+                e.getClass().getSimpleName());
         strategies.stream()
                 .filter(strategy -> {
                     boolean supported = strategy.supports(e);
                     if (supported) {
-                        log.debug("[{}] Selected Strategy: {}",
-                                this.getClass().getSimpleName(),
+                        log.debug("[{}:--] Found Strategy [{}]", 
+                                this.getClass().getSimpleName(), 
                                 strategy.getClass().getSimpleName());
                     }
                     return supported;
                 })
                 .findFirst()
-                .ifPresent(strategy -> strategy.handle(e));
+                .ifPresent(strategy -> {
+                    log.debug("[{}:<<] Handling Exception [{}] with Strategy [{}]",
+                            this.getClass().getSimpleName(),
+                            e.getClass().getSimpleName(),
+                            strategy.getClass().getSimpleName());
+                    strategy.handle(e);
+                });
     }
 }

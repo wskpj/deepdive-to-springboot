@@ -21,6 +21,10 @@ public class HandledExceptionResponseMapper implements ExceptionResponseMapper {
 
     @Override
     public ApiError map(Exception e, String uri) {
+        HandledException he = (HandledException) e;
+        if (he.getErrorType() instanceof WebError we) {
+            return ApiError.of(we, uri);
+        }
         return ApiError.of(WebError.BAD_REQUEST, uri);
     }
 }

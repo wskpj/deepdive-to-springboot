@@ -14,8 +14,8 @@ import org.springframework.web.util.WebUtils;
 
 import com.example.lib.common.core.exception.BaseException;
 import com.example.lib.common.core.exception.ErrorLevel;
+import com.example.lib.trace.core.ExceptionContextTracer;
 import com.example.lib.trace.core.TraceConstants;
-import com.example.lib.trace.core.handler.ExceptionContextTracer;
 import com.example.lib.trace.starter.internal.log.MDCInstantLogger;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +35,9 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
 
     @Override
     public void handle(Exception e) {
-        log.debug("[{}:>>] Starting Tracing Exception Context", this.getClass().getSimpleName());
+        log.debug("[{}:>>] Starting Trace Exception Context for [{}]",
+                this.getClass().getSimpleName(),
+                e.getClass().getSimpleName());
 
         // 1. 추적에 사용할 임시 로컬 컨텍스트 생성 (메서드 종료 후 GC됨)
         Map<String, Object> context = new HashMap<>();
@@ -52,18 +54,25 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
             collectPayload(context);
         }
 
-        String errorCode = (e instanceof BaseException be) ? be.getErrorType().getCode() : "NONE";
+        String errorCode = (e instanceof BaseException be) ? be.getErrorType().getCode() : "EMPTY";
         context.put(TraceConstants.ERROR_CODE, errorCode);
 
         // 4. 예외 로그 레벨에 맞춰 MDC 즉시 로깅 실행
-        String message = String.format("[%s] %s", exceptionClass, errorCode);
+        String originalCause = (e.getCause() != null) ? e.getCause().getClass().getSimpleName() : "EMPTY";
+        String message = String.format("[%s:--] [%s] %s - original cause [%s]",
+                this.getClass().getSimpleName(),
+                exceptionClass,
+                errorCode,
+                originalCause);
         switch (level) {
             case INFO -> MDCInstantLogger.info(message, context);
             case WARN -> MDCInstantLogger.warn(message, context);
             case ERROR -> MDCInstantLogger.error(message, context);
         }
 
-        log.debug("[{}:<<] Finished Tracing Exception Context : {}", this.getClass().getSimpleName(), exceptionClass);
+        log.debug("[{}:<<] Finished Tracing Exception Context [{}]",
+                this.getClass().getSimpleName(),
+                exceptionClass);
     }
 
     private void collectStackTrace(Exception e, Map<String, Object> context) {
@@ -75,10 +84,10 @@ public class DefaultExceptionContextTracer implements ExceptionContextTracer {
     private void collectPayload(Map<String, Object> context) {
         String headers = extractHeaders();
         context.put(TraceConstants.HEADERS, extractHeaders());
-        log.debug("[{}:--] Headers: {}", this.getClass().getSimpleName(), headers);
+        log.debug("[{}:--]\nHeaders:\n{}", this.getClass().getSimpleName(), headers);
         String payload = extractPayload();
         context.put(TraceConstants.PAYLOAD, extractPayload());
-        log.debug("[{}:--] Payload: {}", this.getClass().getSimpleName(), payload);
+        log.debug("[{}:--]\nPayload:\n{}", this.getClass().getSimpleName(), payload);
     }
 
     private String extractHeaders() {

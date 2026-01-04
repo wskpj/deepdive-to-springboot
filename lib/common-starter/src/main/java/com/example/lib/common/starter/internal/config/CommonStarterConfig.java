@@ -14,7 +14,7 @@ import com.example.lib.common.starter.internal.dispatcher.DefaultExceptionHandle
 import com.example.lib.common.starter.internal.strategy.HandledExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.SystemExceptionStrategy;
 import com.example.lib.common.starter.internal.strategy.UnhandledExceptionStrategy;
-import com.example.lib.trace.core.handler.ExceptionContextTracer;
+import com.example.lib.trace.core.ExceptionContextTracer;
 
 /**
  * 공통 예외 처리 모듈(common-starter)의 자동 구성(AutoConfiguration) 클래스

@@ -22,6 +22,14 @@ public class WebExceptionResponseMapper implements ExceptionResponseMapper {
     @Override
     public ApiError map(Exception e, String uri) {
         WebException we = (WebException) e;
-        return ApiError.of((WebError) we.getErrorType(), uri);
+        WebError error = (WebError) we.getErrorType();
+        String message = we.getMessage() != null ? we.getMessage() : error.getMessage();
+        return new ApiError(
+            error.getStatus(),
+            error.getCode(),
+            message,
+            uri,
+            new java.util.HashMap<>()
+        );
     }
 }
